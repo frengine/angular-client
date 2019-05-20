@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ShaderTestComponent } from './shader-test/shader-test.component';
-import { HeaderComponent } from './header';
+import { HeaderComponent } from './components/header/header.component';
 
 
 @NgModule({
@@ -16,7 +16,7 @@ import { HeaderComponent } from './header';
     AppComponent,
     LoginComponent,
     ShaderTestComponent,
-    HeaderComponent
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
