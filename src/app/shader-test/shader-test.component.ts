@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 @Component({
   selector: 'app-shader-test',
   templateUrl: './shader-test.component.html',
-  styleUrls: ['./shader-test.component.sass']
+  styleUrls: ['./shader-test.component.scss']
 })
 export class ShaderTestComponent implements OnInit {
 
