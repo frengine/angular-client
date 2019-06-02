@@ -13,13 +13,12 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string): Observable<Any> {
-    this.http.post(this.baseUrl + '/auth/login', {
+  login(username: string, password: string): Observable<any> {
+    return this.http.post(this.baseUrl + '/auth/login', {
       login: username,
       password: password
     }).pipe(
-      tap( _ => {}),
-      map()
+      tap( _ => {})
     );
   }
 }
