@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ShaderTestComponent } from './shader-test/shader-test.component';
 import { HeaderComponent } from './header';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { HeaderComponent } from './header';
     BrowserAnimationsModule,
     CustomMaterialModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
