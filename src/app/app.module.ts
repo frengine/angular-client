@@ -13,6 +13,7 @@ import { HeaderComponent } from './components/header/header.component';
 
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { ShaderEditorComponent } from './components/shader-editor/shader-editor.component';
+import { ShaderViewerComponent } from './components/shader-viewer/shader-viewer.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ShaderEditorComponent } from './components/shader-editor/shader-editor.
     ShaderTestComponent,
     HeaderComponent,
     ShaderEditorComponent,
+    ShaderViewerComponent,
   ],
   imports: [
     BrowserModule,

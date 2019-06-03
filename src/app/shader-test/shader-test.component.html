@@ -1,19 +1,11 @@
 <div>
   <div>
     <h2>Render</h2>
-    <canvas id="glCanvas" width="500" height="350"></canvas>
+    <app-shader-viewer #viewer [shader]="shader"></app-shader-viewer>
   </div>
 
   <div>
-    <h2>Fragment shader</h2>
-    <button color="info" (click)="randomColor()">random color</button>
-    or start typing
-    <!-- <textarea id="text-inp" width="" height="200" (keyup)="shader()">
-void main(void) {
-     gl_FragColor = vec4(gl_FragCoord.x / 640.0, gl_FragCoord.y / 480.0, 0, 1);
-}
-    </textarea> -->
 
-    <app-shader-editor></app-shader-editor>
+    <app-shader-editor [shader]="shader" (onChange)="viewer.compile()"></app-shader-editor>
   </div>
 </div>
