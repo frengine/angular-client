@@ -1,0 +1,13 @@
+@import "~@angular/material/theming";
+
+// Angular Material theme colors:
+
+$primaryPalette: mat-palette($mat-indigo);
+$accentPalette: mat-palette($mat-amber, A400);
+$warnPalette: mat-palette($mat-red);
+
+$myDefaultTheme: mat-light-theme($primaryPalette, $accentPalette, $warnPalette);
+
+$primary: mat-color($primaryPalette);
+$accent: mat-color($accentPalette);
+$warn: mat-color($warnPalette);

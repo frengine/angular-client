@@ -1,3 +1,5 @@
+import 'hammerjs'; // for angular-material gesture support
+
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
