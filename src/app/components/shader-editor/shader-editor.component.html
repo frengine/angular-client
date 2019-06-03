@@ -1,4 +1,6 @@
-<mat-tab-group animationDuration="0ms" (selectedIndexChange)="tabChange($event)">
+<mat-tab-group animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="selectedTab"
+  (selectedIndexChange)="selectedTab = $event">
+
   <mat-tab label="Vertex shader">
 
     <ngx-monaco-editor #vertEditor [options]="editorOptions" [(ngModel)]="shader.vertSource"></ngx-monaco-editor>

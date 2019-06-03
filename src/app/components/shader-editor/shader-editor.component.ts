@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, DoCheck } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, DoCheck } from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
@@ -9,7 +9,7 @@ import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.servi
   templateUrl: './shader-editor.component.html',
   styleUrls: ['./shader-editor.component.scss']
 })
-export class ShaderEditorComponent implements OnInit, DoCheck {
+export class ShaderEditorComponent implements DoCheck {
 
   @Input() shader: Shader // the shader to be edited.
   @Output() onChange: EventEmitter<any> = new EventEmitter()
@@ -24,12 +24,9 @@ export class ShaderEditorComponent implements OnInit, DoCheck {
   vertEditor: monaco.editor.IStandaloneCodeEditor
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
+  selectedTab: number
+
   private lastCompileResult: CompileResult
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
   ngDoCheck() {
     if (!this.vertEditor) {
@@ -48,6 +45,20 @@ export class ShaderEditorComponent implements OnInit, DoCheck {
     this.showErrorsAndWarningsInEditor(compileResult.vert.log, this.vertEditor)
     this.showErrorsAndWarningsInEditor(compileResult.frag.log, this.fragEditor)
     this.lastCompileResult = compileResult
+  }
+
+  goTo(vertOrFrag: number, line: number) {
+    let editor = vertOrFrag == 0 ? this.vertEditor : this.fragEditor
+
+    editor.focus()
+    editor.setPosition({
+
+      column: 1, lineNumber: line
+
+    })
+    editor.revealLine(line)
+
+    this.selectedTab = vertOrFrag
   }
 
   private prevErrAndWarnDecorations: { [editorId: string]: any[] } = {}
@@ -69,7 +80,6 @@ export class ShaderEditorComponent implements OnInit, DoCheck {
           options: {
             isWholeLine: true,
             className,
-            zIndex: 999,
             hoverMessage: { value: entry.message }
           }
 

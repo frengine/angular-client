@@ -1,0 +1,11 @@
+<div *ngFor="let log of logs">
+  <div *ngIf="log.entries.length">
+    {{log.vertOrFrag == 0 ? "Vertex" : "Fragment"}} shader:
+
+    <div *ngFor="let entry of log.entries" [ngClass]="'log-entry-type' + entry.severity" class="log-entry"
+      (click)="goTo.emit({vertOrFrag: log.vertOrFrag, line: entry.line})">
+
+      <span class="line-number">Line {{entry.line}}:</span> {{entry.message}}
+    </div>
+  </div>
+</div>

@@ -1,11 +1,7 @@
 <div>
-  <div>
-    <h2>Render</h2>
-    <app-shader-viewer #viewer [shader]="shader" (onCompileResults)="editor.showErrorsAndWarnings($event)"></app-shader-viewer>
-  </div>
+  <app-shader-viewer #viewer [shader]="shader" (onCompileResults)="editor.showErrorsAndWarnings($event); log.compileResult = $event"></app-shader-viewer>
 
-  <div>
+  <app-shader-log-viewer #log (goTo)="editor.goTo($event.vertOrFrag, $event.line)"></app-shader-log-viewer>
 
-    <app-shader-editor #editor [shader]="shader" (onChange)="viewer.compileAndRender()"></app-shader-editor>
-  </div>
+  <app-shader-editor #editor [shader]="shader" (onChange)="viewer.compileAndRender()"></app-shader-editor>
 </div>
