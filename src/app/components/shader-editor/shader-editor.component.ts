@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, D
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
+import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.service';
 
 @Component({
   selector: 'app-shader-editor',
@@ -10,9 +11,9 @@ import * as monaco from 'monaco-editor';
 })
 export class ShaderEditorComponent implements OnInit, DoCheck {
 
-  @Input() shader: Shader
+  @Input() shader: Shader // the shader to be edited.
   @Output() onChange: EventEmitter<any> = new EventEmitter()
-  
+
   editorOptions: MonacoOptions = { theme: 'vs', language: 'c' };
 
   // these are 2 components that contain a monaco-editor:
@@ -23,6 +24,8 @@ export class ShaderEditorComponent implements OnInit, DoCheck {
   vertEditor: monaco.editor.IStandaloneCodeEditor
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
+  private lastCompileResult: CompileResult
+
   constructor() { }
 
   ngOnInit() {
@@ -32,11 +35,48 @@ export class ShaderEditorComponent implements OnInit, DoCheck {
     if (!this.vertEditor) {
       this.vertEditor = this.vertEditorContainer.editor
       if (this.vertEditor) this.vertEditor.onKeyUp(() => this.onCodeChanged())
+      this.showErrorsAndWarnings(this.lastCompileResult)
     }
     if (!this.fragEditor) {
       this.fragEditor = this.fragEditorContainer.editor
       if (this.fragEditor) this.fragEditor.onKeyUp(() => this.onCodeChanged())
+      this.showErrorsAndWarnings(this.lastCompileResult)
     }
+  }
+
+  showErrorsAndWarnings(compileResult: CompileResult) {
+    this.showErrorsAndWarningsInEditor(compileResult.vert.log, this.vertEditor)
+    this.showErrorsAndWarningsInEditor(compileResult.frag.log, this.fragEditor)
+    this.lastCompileResult = compileResult
+  }
+
+  private prevErrAndWarnDecorations: { [editorId: string]: any[] } = {}
+
+  private showErrorsAndWarningsInEditor(log: LogEntry[], editor: monaco.editor.IStandaloneCodeEditor) {
+
+    if (!editor) return // editor is not yet initialized
+
+    // replace old error and warning decorations with new ones:
+    this.prevErrAndWarnDecorations[editor.getId()] = editor.deltaDecorations(
+
+      this.prevErrAndWarnDecorations[editor.getId()] || [],
+
+      log.map(entry => {
+        const className = entry.severity == Severity.ERROR ? 'editor-error' : 'editor-warning'
+        return {
+
+          range: new monaco.Range(entry.line, 1, entry.line, 1000),
+          options: {
+            isWholeLine: true,
+            className,
+            zIndex: 999,
+            hoverMessage: { value: entry.message }
+          }
+
+        } as monaco.editor.IModelDeltaDecoration
+      })
+
+    )
   }
 
   tabChange(index: number) {

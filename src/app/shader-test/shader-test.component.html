@@ -1,11 +1,11 @@
 <div>
   <div>
     <h2>Render</h2>
-    <app-shader-viewer #viewer [shader]="shader"></app-shader-viewer>
+    <app-shader-viewer #viewer [shader]="shader" (onCompileResults)="editor.showErrorsAndWarnings($event)"></app-shader-viewer>
   </div>
 
   <div>
 
-    <app-shader-editor [shader]="shader" (onChange)="viewer.compile()"></app-shader-editor>
+    <app-shader-editor #editor [shader]="shader" (onChange)="viewer.compileAndRender()"></app-shader-editor>
   </div>
 </div>

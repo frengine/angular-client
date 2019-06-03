@@ -1,4 +1,10 @@
 ngx-monaco-editor {
     width: 500px;
     height: 600px;
+
+    ::ng-deep {
+      .editor-error {
+        background: rgb(255, 147, 147);
+      }
+    }
 }
