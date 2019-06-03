@@ -11,6 +11,8 @@ import { ShaderTestComponent } from './shader-test/shader-test.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
+import { ShaderEditorComponent } from './components/shader-editor/shader-editor.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { HeaderComponent } from './components/header/header.component';
     LoginComponent,
     ShaderTestComponent,
     HeaderComponent,
+    ShaderEditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,8 @@ import { HeaderComponent } from './components/header/header.component';
     CustomMaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MonacoEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -8,10 +8,12 @@
     <h2>Fragment shader</h2>
     <button color="info" (click)="randomColor()">random color</button>
     or start typing
-    <textarea id="text-inp" width="" height="200" (keyup)="shader()">
+    <!-- <textarea id="text-inp" width="" height="200" (keyup)="shader()">
 void main(void) {
      gl_FragColor = vec4(gl_FragCoord.x / 640.0, gl_FragCoord.y / 480.0, 0, 1);
 }
-    </textarea>
+    </textarea> -->
+
+    <app-shader-editor></app-shader-editor>
   </div>
 </div>
