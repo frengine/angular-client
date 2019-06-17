@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, DoCheck } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, Renderer2, DoCheck } from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
@@ -25,20 +25,46 @@ export class ShaderEditorComponent implements DoCheck {
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
   selectedTab: number
+  floatPicker: HTMLElement
 
   private lastCompileResult: CompileResult
+
+  ngOnInit() {
+    this.floatPicker = document.createElement('div');
+    this.floatPicker.className = "hide";
+    document.body.appendChild(this.floatPicker);
+  }
 
   ngDoCheck() {
     if (!this.vertEditor) {
       this.vertEditor = this.vertEditorContainer.editor
-      if (this.vertEditor) this.vertEditor.onKeyUp(() => this.onCodeChanged())
+      if (this.vertEditor) {
+        this.vertEditor.onMouseDown(e => {this.updatePickers(e)});
+        this.vertEditor.onKeyUp(() => this.onCodeChanged());
+      }
       this.showErrorsAndWarnings(this.lastCompileResult)
     }
     if (!this.fragEditor) {
       this.fragEditor = this.fragEditorContainer.editor
-      if (this.fragEditor) this.fragEditor.onKeyUp(() => this.onCodeChanged())
+      if (this.fragEditor) {
+        this.fragEditor.onMouseDown(e => {this.updatePickers(e)});
+        this.fragEditor.onKeyUp(() => this.onCodeChanged())
+      }
       this.showErrorsAndWarnings(this.lastCompileResult)
     }
+  }
+
+  updatePickers(e : monaco.editor.IEditorMouseEvent) {
+    this.floatPicker.style.cssText = "";
+
+    console.log("JHEEE", e);
+    if (e.target.element.className === "mtk7") { // FLOAT PICKER
+      var width = 150, height = 50;
+      var left = e.event.posx - width / 2, top = e.event.posy + 15;
+      this.floatPicker.style.cssText = 'position:absolute; left: '+left+'px; top: '+top+'px; width:'+width+'px; height:'+height+'px; z-index:9999999; background:rgb(255,0,255); ';
+      this.floatPicker.className = "";
+    }
+
   }
 
   showErrorsAndWarnings(compileResult: CompileResult) {
