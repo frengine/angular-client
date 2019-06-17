@@ -3,6 +3,7 @@ import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-edi
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
 import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.service';
+import { FloatPickerComponent } from 'src/app/components/code-pickers/float-picker.component';
 
 @Component({
   selector: 'app-shader-editor',
@@ -25,15 +26,9 @@ export class ShaderEditorComponent implements DoCheck {
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
   selectedTab: number
-  floatPicker: HTMLElement
+  @ViewChild('floatPicker') floatPicker : FloatPickerComponent; 
 
   private lastCompileResult: CompileResult
-
-  ngOnInit() {
-    this.floatPicker = document.createElement('div');
-    this.floatPicker.className = "hide";
-    document.body.appendChild(this.floatPicker);
-  }
 
   ngDoCheck() {
     if (!this.vertEditor) {
@@ -55,16 +50,17 @@ export class ShaderEditorComponent implements DoCheck {
   }
 
   updatePickers(e : monaco.editor.IEditorMouseEvent) {
-    this.floatPicker.style.cssText = "";
+    this.clearPickers();
 
     console.log("JHEEE", e);
     if (e.target.element.className === "mtk7") { // FLOAT PICKER
-      var width = 150, height = 50;
-      var left = e.event.posx - width / 2, top = e.event.posy + 15;
-      this.floatPicker.style.cssText = 'position:absolute; left: '+left+'px; top: '+top+'px; width:'+width+'px; height:'+height+'px; z-index:9999999; background:rgb(255,0,255); ';
-      this.floatPicker.className = "";
+      this.floatPicker.setPicker(e);
     }
-
+    
+  }
+  
+  clearPickers() {
+    this.floatPicker.setActive(false);
   }
 
   showErrorsAndWarnings(compileResult: CompileResult) {
@@ -116,10 +112,12 @@ export class ShaderEditorComponent implements DoCheck {
   }
 
   tabChange(index: number) {
+    this.clearPickers();
     (index == 0 ? this.vertEditor : this.fragEditor).focus()
   }
 
   private onCodeChanged() {
+    this.clearPickers();
     this.onChange.emit()
   }
 

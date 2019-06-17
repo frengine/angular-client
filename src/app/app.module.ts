@@ -15,6 +15,7 @@ import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { ShaderEditorComponent } from './components/shader-editor/shader-editor.component';
 import { ShaderViewerComponent } from './components/shader-viewer/shader-viewer.component';
 import { ShaderLogViewerComponent } from './components/shader-log-viewer/shader-log-viewer.component';
+import { FloatPickerComponent } from './components/code-pickers/float-picker.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ShaderLogViewerComponent } from './components/shader-log-viewer/shader-
     ShaderEditorComponent,
     ShaderViewerComponent,
     ShaderLogViewerComponent,
+    FloatPickerComponent,
   ],
   imports: [
     BrowserModule,
