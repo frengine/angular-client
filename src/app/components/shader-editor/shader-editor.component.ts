@@ -15,7 +15,10 @@ export class ShaderEditorComponent implements DoCheck {
   @Input() shader: Shader // the shader to be edited.
   @Output() onChange: EventEmitter<any> = new EventEmitter()
 
-  editorOptions: MonacoOptions = { theme: 'vs', language: 'c' };
+  editorOptions: MonacoOptions = { 
+    theme: 'vs-dark', // !!! LETOP NIET VERANDEREN !!! pickups gebruiken de css classen die dit thema genereerd
+    language: 'c'
+  };
 
   // these are 2 components that contain a monaco-editor:
   @ViewChild("vertEditor") vertEditorContainer: MonacoEditorComponent
@@ -52,9 +55,10 @@ export class ShaderEditorComponent implements DoCheck {
   updatePickers(e : monaco.editor.IEditorMouseEvent) {
     this.clearPickers();
 
-    console.log("JHEEE", e);
-    if (e.target.element.className === "mtk7") { // FLOAT PICKER
-      this.floatPicker.setPicker(e);
+    if (e.target.element.className === "mtk6" || e.target.element.className === "mtk7") { // FLOAT PICKER
+      this.floatPicker.setPicker(e, (edit: monaco.editor.IIdentifiedSingleEditOperation) => { 
+        this.vertEditor.executeEdits("customedit", [edit]);
+        this.onChange.emit(); });
     }
     
   }

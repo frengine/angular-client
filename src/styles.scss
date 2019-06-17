@@ -8,3 +8,23 @@
 body {
     margin: 0;
 }
+
+.mat-tab-labels {
+    border-bottom: solid 1px;
+
+    .mat-tab-label {
+        color: white;
+
+        &.mat-tab-label-active { text-decoration: underline; }
+    }
+}
+
+.mtk6 {
+    cursor: pointer;
+    border-bottom: solid 1px;
+
+    &:hover, &.active {
+        color: white;
+        border-bottom-color: white;
+    }
+}
