@@ -14,8 +14,7 @@ export class LoginService {
   private baseUrl = '';
   private loggedUser: string;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<boolean> {
     return this.http.post(this.baseUrl + '/auth/login', {
@@ -36,13 +35,21 @@ export class LoginService {
     );
   }
 
-  private loginUser(username: string, tokens: any) {
+  private loginUser(username: string, data: any) {
+    if (data.success !== true) {
+      alert('Login failed');
+      console.log(username)
+      console.log(data)
+      return;
+    }
     this.loggedUser = username;
-    this.storeJwtTokens(tokens);
+    localStorage.setItem('username', username);
+    this.storeJwtTokens(data.token);
   }
 
   private logoutUser() {
     this.loggedUser = null;
+    localStorage.removeItem('username');
     this.deleteJwtTokens();
   }
 
@@ -50,8 +57,8 @@ export class LoginService {
     return localStorage.getItem(this.NAME_JWT_TOKEN);
   }
 
-  private storeJwtTokens(tokens) {
-    localStorage.setItem(this.NAME_JWT_TOKEN, tokens.token);
+  private storeJwtTokens(token) {
+    localStorage.setItem(this.NAME_JWT_TOKEN, token);
   }
 
   private deleteJwtTokens() {
