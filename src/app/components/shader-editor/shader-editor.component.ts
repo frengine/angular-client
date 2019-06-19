@@ -1,19 +1,28 @@
-import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, Renderer2, DoCheck } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
 import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.service';
 import { FloatPickerComponent } from 'src/app/components/code-pickers/float-picker.component';
+import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 
 @Component({
   selector: 'app-shader-editor',
   templateUrl: './shader-editor.component.html',
   styleUrls: ['./shader-editor.component.scss']
 })
-export class ShaderEditorComponent implements DoCheck {
-
+export class ShaderEditorComponent implements DoCheck, OnInit {
+  
   @Input() shader: Shader // the shader to be edited.
-  @Output() onChange: EventEmitter<any> = new EventEmitter()
+  @Output() onChange: EventEmitter<any>
+  
+  constructor(public editorService : ShaderEditorService) {
+    this.onChange = editorService.onChange;
+  }
+
+  ngOnInit() {
+    this.editorService.shader = this.shader;
+  }
 
   editorOptions: MonacoOptions = { 
     theme: 'vs-dark', // !!! LETOP NIET VERANDEREN !!! pickups gebruiken de css classen die dit thema genereerd
@@ -28,7 +37,6 @@ export class ShaderEditorComponent implements DoCheck {
   vertEditor: monaco.editor.IStandaloneCodeEditor
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
-  selectedTab: number
   @ViewChild('floatPicker') floatPicker : FloatPickerComponent; 
 
   private lastCompileResult: CompileResult
@@ -56,9 +64,7 @@ export class ShaderEditorComponent implements DoCheck {
     this.clearPickers();
 
     if (e.target.element.className === "mtk6" || e.target.element.className === "mtk7") { // FLOAT PICKER
-      this.floatPicker.setPicker(e, (edit: monaco.editor.IIdentifiedSingleEditOperation) => { 
-        this.vertEditor.executeEdits("customedit", [edit]);
-        this.onChange.emit(); });
+      this.floatPicker.setPicker(e, this.getEditor(this.editorService.tabIndex));
     }
     
   }
@@ -83,8 +89,6 @@ export class ShaderEditorComponent implements DoCheck {
 
     })
     editor.revealLine(line)
-
-    this.selectedTab = vertOrFrag
   }
 
   private prevErrAndWarnDecorations: { [editorId: string]: any[] } = {}
@@ -117,7 +121,12 @@ export class ShaderEditorComponent implements DoCheck {
 
   tabChange(index: number) {
     this.clearPickers();
-    (index == 0 ? this.vertEditor : this.fragEditor).focus()
+    this.editorService.tabIndex = index
+    this.getEditor(index).focus()
+  }
+
+  private getEditor(index:number) {
+    return index == 0 ? this.vertEditor : this.fragEditor;
   }
 
   private onCodeChanged() {

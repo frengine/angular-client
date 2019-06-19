@@ -3,12 +3,12 @@
 
   <mat-tab label="Vertex shader">
 
-    <ngx-monaco-editor #vertEditor [options]="editorOptions" [(ngModel)]="shader.vertSource"></ngx-monaco-editor>
+    <ngx-monaco-editor #vertEditor [options]="editorOptions" [(ngModel)]="editorService.shader.vertSource"></ngx-monaco-editor>
 
   </mat-tab>
   <mat-tab label="Fragment shader">
 
-    <ngx-monaco-editor #fragEditor [options]="editorOptions" [(ngModel)]="shader.fragSource"></ngx-monaco-editor>
+    <ngx-monaco-editor #fragEditor [options]="editorOptions" [(ngModel)]="editorService.shader.fragSource"></ngx-monaco-editor>
 
   </mat-tab>
 </mat-tab-group>
