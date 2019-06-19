@@ -1,18 +1,23 @@
-<div>
-  <h1>Login</h1>
+<div style="background-color: #ddd; height: 100vh; padding-top: 20px">
   <form (ngSubmit)="onSubmit()">
-    <div>
-      <label>
-        <span>Username</span>
-        <input type="text" [formControl]="username">
-      </label>
-    </div>
-    <div>
-      <label>
-        <span>Password</span>
-        <input type="password" [formControl]="password">
-      </label>
-    </div>
-    <button>Login</button>
+    <mat-card class="my-card" style="width: 500px; margin: 0px auto;">
+      <h1>Inloggen</h1>
+      <mat-card-content>
+        <form class="my-form">
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Username" [formControl]="username">
+          </mat-form-field>
+          <br/>
+          <mat-form-field class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Password" [formControl]="password">
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary">LOGIN</button>
+      </mat-card-actions>
+    </mat-card>
   </form>
 </div>
