@@ -16,7 +16,8 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.showUsername();
     this.loginService.userSubject.subscribe((x) => {
-      this.showUsername(x.user.name);
+      console.log(x);
+      this.showUsername(x.name);
     });
   }
 

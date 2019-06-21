@@ -1,19 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from './project.service';
-
-
-export interface Author {
-	id: number;
-	name: string;
-}
-
-export interface Project {
-	id: number;
-	name: string;
-	author: Author;
-	modtime: number;
-	created: number;
-}
+import { ProjectService, Project } from './project.service';
 
 @Component({
   selector: 'app-project',
@@ -33,7 +19,10 @@ export class ProjectComponent implements OnInit {
 	showProjects() {
 		console.log("show projects")
 		this.projectService.getAll().subscribe(
-			resp => this.projects
+			(data: Project[]) => {
+				console.log(data)
+				this.projects = data
+			}
 		)
 	}
 

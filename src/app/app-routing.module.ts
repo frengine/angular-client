@@ -3,10 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
 import {ShaderTestComponent} from './shader-test/shader-test.component';
+import {RegisterComponent} from './login/register.component';
 
 const routes: Routes = [
   { path: '', component: ProjectComponent },
   { path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent},
   { path: 'shader', component: ShaderTestComponent}
 ];
 
