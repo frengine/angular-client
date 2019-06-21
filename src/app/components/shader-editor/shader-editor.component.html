@@ -21,9 +21,9 @@
   </mat-expansion-panel>
 
   <div fxFlex="auto">
-    <ngx-monaco-editor #vertEditor [options]="editorOptions" [style.display]="selectedTab == 0 ? 'block' : 'none'" [(ngModel)]="shader.vertSource"></ngx-monaco-editor>
+    <ngx-monaco-editor #vertEditor [options]="editorOptions" [style.display]="selectedTab == 0 ? 'block' : 'none'" [(ngModel)]="editorService.shader.vertSource"></ngx-monaco-editor>
     
-    <ngx-monaco-editor #fragEditor [style.display]="selectedTab == 1 ? 'block' : 'none'" [options]="editorOptions" [(ngModel)]="shader.fragSource"></ngx-monaco-editor>
+    <ngx-monaco-editor #fragEditor [style.display]="selectedTab == 1 ? 'block' : 'none'" [options]="editorOptions" [(ngModel)]="editorService.shader.fragSource"></ngx-monaco-editor>
   </div>
 </div>
 

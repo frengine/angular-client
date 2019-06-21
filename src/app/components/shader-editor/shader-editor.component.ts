@@ -1,10 +1,10 @@
-import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, Renderer2, DoCheck, OnInit, HostListener, ElementRef } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
 import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.service';
 import { FloatPickerComponent } from 'src/app/components/code-pickers/float-picker.component';
-import { MatTabGroup } from '@angular/material';
+import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 
 @Component({
   selector: 'app-shader-editor',
@@ -12,12 +12,18 @@ import { MatTabGroup } from '@angular/material';
   styleUrls: ['./shader-editor.component.scss']
 })
 export class ShaderEditorComponent implements DoCheck, OnInit {
-  ngOnInit() {
-    window["shaderEditor"] = this
-  }
 
   @Input() shader: Shader // the shader to be edited.
-  @Output() onChange: EventEmitter<any> = new EventEmitter()
+  @Output() onChange: EventEmitter<any>
+  
+  constructor(public editorService : ShaderEditorService) {
+    this.onChange = editorService.onChange;
+  }
+
+  ngOnInit() {
+    this.editorService.shader = this.shader;
+    window["shaderEditor"] = this
+  }
 
   editorOptions: MonacoOptions = { 
     theme: 'vs-dark', // !!! LETOP NIET VERANDEREN !!! pickups gebruiken de css classen die dit thema genereerd
@@ -34,6 +40,7 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
   selectedTab: number = 0
+  
   @ViewChild('floatPicker') floatPicker : FloatPickerComponent; 
 
   private lastCompileResult: CompileResult
@@ -61,9 +68,7 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
     this.clearPickers();
 
     if (e.target.element.className === "mtk6" || e.target.element.className === "mtk7") { // FLOAT PICKER
-      this.floatPicker.setPicker(e, (edit: monaco.editor.IIdentifiedSingleEditOperation) => { 
-        this.vertEditor.executeEdits("customedit", [edit]);
-        this.onChange.emit(); });
+      this.floatPicker.setPicker(e, this.getEditor(this.editorService.tabIndex));
     }
     
   }
@@ -89,8 +94,6 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
 
     })
     editor.revealLine(line)
-
-    this.selectedTab = vertOrFrag
   }
 
   private prevErrAndWarnDecorations: { [editorId: string]: any[] } = {}
@@ -123,7 +126,12 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
 
   tabChange(index: number) {
     this.clearPickers();
-    (index == 0 ? this.vertEditor : this.fragEditor).focus()
+    this.editorService.tabIndex = index
+    this.getEditor(index).focus()
+  }
+
+  private getEditor(index:number) {
+    return index == 0 ? this.vertEditor : this.fragEditor;
   }
 
   private onCodeChanged() {

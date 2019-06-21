@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as monaco from 'monaco-editor';
+import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 
 @Component({
   selector: 'app-float-picker',
@@ -10,7 +11,7 @@ import * as monaco from 'monaco-editor';
     'height.px': height,
     'top.px': top, 
     'left.px': left
-  }" id="float-picker"> TODO: slider </div> `,
+  }" id="float-picker"> <mat-slider [max]="sliderMax" [min]="sliderMin" (input)="sliderValue=$event.value" [value]="sliderBeginValue" [step]="sliderStepSize"></mat-slider>  </div> `,
 
   styles: [`
   div { 
@@ -33,9 +34,30 @@ export class FloatPickerComponent implements OnInit {
   private left: number = 0;
   private top: number = 0;
   private element: HTMLElement = null;
-  private updateCB: Function = null;
+  private editor: monaco.editor.IStandaloneCodeEditor = null;
+  private correctedElementRange: monaco.Range = null;
+  private lastEditText: string = null;
 
-  constructor() { }
+  public sliderMax: number
+  public sliderMin: number
+  public sliderStepSize: number
+  public sliderBeginValue: number
+
+  public set sliderValue(val: number) {
+    let newValue: string = ""
+    if (this.element.innerHTML.indexOf(".") != -1) { // if IsFloat
+      let decimals: number = this.element.innerHTML.split(".")[1].length;
+      newValue = Number(val).toFixed(decimals);
+      if (decimals == 0) // 0. is valid in CG
+        newValue += "."
+    } else { // If isInt
+      newValue = val.toFixed(0);
+    }
+
+    this.update({ range: this.correctedElementRange, text: newValue });    
+  }
+
+  constructor(private editorService: ShaderEditorService) { }
   ngOnInit() { }
 
   private setPosition(x:number, y:number) {
@@ -43,37 +65,64 @@ export class FloatPickerComponent implements OnInit {
     this.top = y + 15;
   }
 
-  setPicker(e : monaco.editor.IEditorMouseEvent, cb: Function) {
+  setPicker(e: monaco.editor.IEditorMouseEvent, editor: monaco.editor.IStandaloneCodeEditor) {
     this.show = true;
-    this.updateCB = cb;
 
     this.element = e.target.element as HTMLElement; 
-    this.setPosition(e.event.posx, e.event.posy);
+    this.editor = editor;
+    this.setPosition(e.event.posx, e.event.posy);   
 
-    let selectedRange = new monaco.Range(
+    this.lastEditText = this.element.innerHTML;
+    let elementValue: number = Number(this.lastEditText);
+
+    this.sliderMin = elementValue - 1;
+    this.sliderMax = elementValue + 1;
+    this.sliderBeginValue = elementValue;
+    this.sliderStepSize = (this.lastEditText.indexOf(".") == -1)? 1 : 0.01;
+
+    let correctedStartCollumn: number = this.getCorrectedStartCollumn(e.target.range);
+
+    this.correctedElementRange = new monaco.Range(
       e.target.range.startLineNumber, // startLineNumber
-      e.target.range.startColumn,     // startColumn 
+      correctedStartCollumn, // startColumn 
       e.target.range.startLineNumber, // endLineNumber
-      e.target.range.startColumn + e.target.element.innerHTML.length, // endColumn
+      correctedStartCollumn + e.target.element.innerHTML.length, // endColumn
     )
-
-    console.log("You clicked to edit ", e, selectedRange);
-      
-    this.updateCB({
-      range: selectedRange,
-      text: (Number(e.target.element.innerHTML) + 1).toString()
-    });
   }
 
-  setActive(bool: boolean) {
+  private getCorrectedStartCollumn(range: monaco.Range) {
+    let codeTextLine: string = this.editorService.getReadOnlyShaderText().split("\n")[range.startLineNumber - 1];
+    let i: number = range.startColumn;
+    while (codeTextLine.charAt(i-1).match(/[0-9|.|-]/) != null && i >= 0) { i--; }
+    return i + 1
+  }
+
+  private correctRange(newValue: string) {
+    this.correctedElementRange = new monaco.Range( // We need to correct for the new length
+      this.correctedElementRange.startLineNumber,
+      this.correctedElementRange.startColumn,
+      this.correctedElementRange.endLineNumber,
+      this.correctedElementRange.endColumn + ((this.lastEditText != null)? (newValue.length - this.lastEditText.length) : 0)
+    );
+  }
+
+  setActive(bool: boolean) {  
+    if (this.show != bool) { // If we clicked away we need to save
+      this.save({range: this.correctedElementRange, text: this.lastEditText})
+    }
+
     this.show = bool;
   }
+
+  update(edit: monaco.editor.IIdentifiedSingleEditOperation) {
+    this.lastEditText = edit.text;
+    this.correctRange(edit.text);
+    this.editor.getModel().applyEdits([edit]);
+    this.editorService.onChange.emit()
+  }
+
+  save(edit: monaco.editor.IIdentifiedSingleEditOperation) { // RIP DOES NOT WORK
+    this.editor.executeEdits("sliderEdit", [edit]);
+    this.editorService.onChange.emit()
+  }
 }
-
-
-// let selectedRange = new monaco.Range(
-//   e.target.position.lineNumber, // startLineNumber
-//   e.target.position.column-1,     // startColumn 
-//   e.target.position.lineNumber, // endLineNumber
-//   e.target.position.column + e.target.element.innerHTML.length -1, // endColumn
-// )

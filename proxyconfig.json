@@ -8,5 +8,10 @@
     "target": "http://butje.remi.im:8083",
     "secure": false,
     "changeOrigin": true
+  },
+  "/projects": {
+    "target": "http://127.0.0.1:8083",
+    "secure": false,
+    "changeOrigin": true
   }
 }
