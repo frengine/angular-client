@@ -15,7 +15,24 @@ void main(void) {
 `
 
 export const DEFAULT_FRAG_CODE = `
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform float u_time;
+uniform vec2 u_mouse;
+uniform ivec2 u_resolution;
+
 void main(void) {
-  gl_FragColor = vec4(gl_FragCoord.x / 640.0, gl_FragCoord.y / 480.0, 0, 1);
+
+	vec2 diff = gl_FragCoord.xy / vec2(u_resolution) - u_mouse;
+
+	if (length(diff) < .1) {
+		gl_FragColor = vec4(1, 0, 1, 1);
+		return;
+	}
+
+	gl_FragColor = vec4(abs(sin(u_time)) * 0.5, u_mouse.x, u_mouse.y, 1.0);
 }
+  
 `

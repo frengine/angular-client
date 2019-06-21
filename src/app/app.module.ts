@@ -22,6 +22,7 @@ import { ShaderLogViewerComponent } from './components/shader-log-viewer/shader-
 import { FloatPickerComponent } from './components/code-pickers/float-picker.component';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { TimestringPipe } from './pipes/timestring.pipe'
+import {NewProjectComponent} from './project/new/newproject.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TimestringPipe } from './pipes/timestring.pipe'
     LoginComponent,
     RegisterComponent,
     ProjectComponent,
+    NewProjectComponent,
     ShaderTestComponent,
     HeaderComponent,
     ShaderEditorComponent,

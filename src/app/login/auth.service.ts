@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
 export class AuthService {
 
   private readonly NAME_JWT_TOKEN = 'JWT_token';
-  private baseUrl = '';
+  private baseUrl = '/api/auth';
   currentUser: User;
   userSubject = new Subject<User>();
 
@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   async login(login: string, password: string) {
-    this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise()
+    this.http.post<any>(this.baseUrl + '/login', {login, password}).toPromise()
       .then((body) => {
         this.loginUser(login, body);
         console.log(body);
@@ -33,7 +33,7 @@ export class AuthService {
   }
 
   logout(userId: string, tokens: Tokens): Observable<any> {
-    return this.http.post(this.baseUrl + '/auth/logout', {
+    return this.http.post(this.baseUrl + '/logout', {
       userId: userId,
       token: tokens.jwt
     }).pipe(
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   async register(name: string, password: string) {
-    this.http.post<any>('/auth/register', {name, password, password2: password}).toPromise()
+    this.http.post<any>(this.baseUrl + '/register', {name, password, password2: password}).toPromise()
       .then((body) => {
         console.log('Register succeed');
         this.login(name, password);

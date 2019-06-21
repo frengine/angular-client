@@ -115,10 +115,10 @@ export class FloatPickerComponent implements OnInit {
   }
 
   update(edit: monaco.editor.IIdentifiedSingleEditOperation) {
-    this.lastEditText = edit.text;
     this.correctRange(edit.text);
     this.editor.getModel().applyEdits([edit]);
     this.editorService.onChange.emit()
+    this.lastEditText = edit.text;
   }
 
   save(edit: monaco.editor.IIdentifiedSingleEditOperation) { // RIP DOES NOT WORK

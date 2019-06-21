@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ProjectService, Project} from './project.service';
+import {ProjectService, Project} from '../project.service';
 
 @Component({
   selector: 'app-project',
@@ -7,7 +7,7 @@ import {ProjectService, Project} from './project.service';
   styleUrls: ['./project.component.scss']
 })
 
-export class ProjectComponent implements OnInit {
+export class NewProjectComponent implements OnInit {
 
   constructor(private projectService: ProjectService) {}
 
