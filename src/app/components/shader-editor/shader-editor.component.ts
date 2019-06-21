@@ -1,23 +1,28 @@
-import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, Renderer2, DoCheck } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter, OnChanges, Renderer2, DoCheck, OnInit, HostListener, ElementRef } from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
 import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.service';
 import { FloatPickerComponent } from 'src/app/components/code-pickers/float-picker.component';
+import { MatTabGroup } from '@angular/material';
 
 @Component({
   selector: 'app-shader-editor',
   templateUrl: './shader-editor.component.html',
   styleUrls: ['./shader-editor.component.scss']
 })
-export class ShaderEditorComponent implements DoCheck {
+export class ShaderEditorComponent implements DoCheck, OnInit {
+  ngOnInit() {
+    window["shaderEditor"] = this
+  }
 
   @Input() shader: Shader // the shader to be edited.
   @Output() onChange: EventEmitter<any> = new EventEmitter()
 
   editorOptions: MonacoOptions = { 
     theme: 'vs-dark', // !!! LETOP NIET VERANDEREN !!! pickups gebruiken de css classen die dit thema genereerd
-    language: 'c'
+    language: 'c',
+    automaticLayout: true
   };
 
   // these are 2 components that contain a monaco-editor:
@@ -28,7 +33,7 @@ export class ShaderEditorComponent implements DoCheck {
   vertEditor: monaco.editor.IStandaloneCodeEditor
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
-  selectedTab: number
+  selectedTab: number = 0
   @ViewChild('floatPicker') floatPicker : FloatPickerComponent; 
 
   private lastCompileResult: CompileResult
@@ -68,6 +73,7 @@ export class ShaderEditorComponent implements DoCheck {
   }
 
   showErrorsAndWarnings(compileResult: CompileResult) {
+    if (!compileResult) return
     this.showErrorsAndWarningsInEditor(compileResult.vert.log, this.vertEditor)
     this.showErrorsAndWarningsInEditor(compileResult.frag.log, this.fragEditor)
     this.lastCompileResult = compileResult

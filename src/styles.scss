@@ -7,6 +7,7 @@
 
 body {
     margin: 0;
+    background: #1e1e1e;
 }
 
 .mat-tab-labels {
@@ -15,7 +16,10 @@ body {
     .mat-tab-label {
         color: white;
 
-        &.mat-tab-label-active { text-decoration: underline; }
+        &.mat-tab-label-active {
+          font-weight: bold;
+          opacity: 1 !important;
+        }
     }
 }
 

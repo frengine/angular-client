@@ -1,6 +1,8 @@
 <div *ngFor="let log of logs">
   <div *ngIf="log.entries.length">
-    {{log.vertOrFrag == 0 ? "Vertex" : "Fragment"}} shader:
+    <p style="color: white">
+      {{log.vertOrFrag == 0 ? "Vertex" : "Fragment"}} shader errors:
+    </p>
 
     <div *ngFor="let entry of log.entries" [ngClass]="'log-entry-type' + entry.severity" class="log-entry"
       (click)="goTo.emit({vertOrFrag: log.vertOrFrag, line: entry.line})">

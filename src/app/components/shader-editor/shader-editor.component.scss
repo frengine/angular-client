@@ -1,10 +1,21 @@
 ngx-monaco-editor {
-  width: 100%;
-  height: 600px;
+  height: 100%;
 
   ::ng-deep {
     .editor-error {
       background: rgb(255, 147, 147);
+    }
+  }
+}
+
+#uniformsPanel {
+  margin: 20px 30px;
+  background: #44475f;
+  ::ng-deep * {
+    color: white !important;
+
+    .mat-expansion-indicator {
+      filter: invert(1);
     }
   }
 }

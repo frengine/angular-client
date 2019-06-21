@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './material.module';
@@ -11,6 +12,7 @@ import { ShaderTestComponent } from './shader-test/shader-test.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { ShaderEditorComponent } from './components/shader-editor/shader-editor.component';
 import { ShaderViewerComponent } from './components/shader-viewer/shader-viewer.component';
@@ -29,6 +31,8 @@ import { FloatPickerComponent } from './components/code-pickers/float-picker.com
     FloatPickerComponent,
   ],
   imports: [
+    DragDropModule,
+    FlexLayoutModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

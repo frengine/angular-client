@@ -1,16 +1,30 @@
-<mat-tab-group animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="selectedTab"
-  (selectedIndexChange)="selectedTab = $event">
+<div fxLayout="column" style="height: 100%">
 
-  <mat-tab label="Vertex shader">
+  <mat-tab-group fxFlex="none" animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="selectedTab"
+    (selectedIndexChange)="selectedTab = $event">
+  
+    <mat-tab label="Vertex shader"></mat-tab>
+    <mat-tab label="Fragment shader"></mat-tab>
+  </mat-tab-group>
 
-    <ngx-monaco-editor #vertEditor [options]="editorOptions" [(ngModel)]="shader.vertSource"></ngx-monaco-editor>
+  <mat-expansion-panel fxFlex="none" id="uniformsPanel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Available uniforms
+      </mat-panel-title>
+      <!-- <mat-panel-description>
+        hi
+      </mat-panel-description> -->
+    </mat-expansion-panel-header>
 
-  </mat-tab>
-  <mat-tab label="Fragment shader">
+    hoi
+  </mat-expansion-panel>
 
-    <ngx-monaco-editor #fragEditor [options]="editorOptions" [(ngModel)]="shader.fragSource"></ngx-monaco-editor>
-
-  </mat-tab>
-</mat-tab-group>
+  <div fxFlex="auto">
+    <ngx-monaco-editor #vertEditor [options]="editorOptions" [style.display]="selectedTab == 0 ? 'block' : 'none'" [(ngModel)]="shader.vertSource"></ngx-monaco-editor>
+    
+    <ngx-monaco-editor #fragEditor [style.display]="selectedTab == 1 ? 'block' : 'none'" [options]="editorOptions" [(ngModel)]="shader.fragSource"></ngx-monaco-editor>
+  </div>
+</div>
 
 <app-float-picker #floatPicker> </app-float-picker>
