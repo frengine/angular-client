@@ -12,7 +12,7 @@ import { ShaderEditorService } from 'src/app/services/shader-editor.service';
   styleUrls: ['./shader-editor.component.scss']
 })
 export class ShaderEditorComponent implements DoCheck, OnInit {
-  
+
   @Input() shader: Shader // the shader to be edited.
   @Output() onChange: EventEmitter<any>
   
@@ -22,11 +22,13 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
 
   ngOnInit() {
     this.editorService.shader = this.shader;
+    window["shaderEditor"] = this
   }
 
   editorOptions: MonacoOptions = { 
     theme: 'vs-dark', // !!! LETOP NIET VERANDEREN !!! pickups gebruiken de css classen die dit thema genereerd
-    language: 'c'
+    language: 'c',
+    automaticLayout: true
   };
 
   // these are 2 components that contain a monaco-editor:
@@ -74,12 +76,14 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
   }
 
   showErrorsAndWarnings(compileResult: CompileResult) {
+    if (!compileResult) return
     this.showErrorsAndWarningsInEditor(compileResult.vert.log, this.vertEditor)
     this.showErrorsAndWarningsInEditor(compileResult.frag.log, this.fragEditor)
     this.lastCompileResult = compileResult
   }
 
   goTo(vertOrFrag: number, line: number) {
+    this.editorService.tabIndex = vertOrFrag
     let editor = vertOrFrag == 0 ? this.vertEditor : this.fragEditor
 
     editor.focus()

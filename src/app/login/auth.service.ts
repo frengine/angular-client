@@ -1,29 +1,35 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 
-import {Observable, throwError} from 'rxjs';
+import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map, mapTo, tap} from 'rxjs/operators';
 import {Tokens} from './tokens';
+import {User} from './user';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LoginService {
+export class AuthService {
 
   private readonly NAME_JWT_TOKEN = 'JWT_token';
   private baseUrl = '';
-  private loggedUser: string;
+  currentUser: User;
+  userSubject = new Subject<User>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post(this.baseUrl + '/auth/login', {
-      login: username,
-      password: password
-    }).pipe(
-      tap(tokens => this.loginUser(username, tokens)),
-      mapTo(true)
-    );
+  async login(login: string, password: string) {
+    this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise()
+      .then((body) => {
+        this.loginUser(login, body);
+        console.log(body);
+        this.router.navigate(['']);
+      }).catch((e) => {
+        console.log(e);
+      });
   }
 
   logout(userId: string, tokens: Tokens): Observable<any> {
@@ -35,35 +41,38 @@ export class LoginService {
     );
   }
 
+  async register(name: string, password: string) {
+    this.http.post<any>('/auth/register', {name, password, password2: password}).toPromise()
+      .then((body) => {
+        console.log('Register succeed');
+        this.login(name, password);
+      }).catch((e) => {
+      console.log(e);
+    });
+  }
+
   private loginUser(username: string, data: any) {
     if (data.success !== true) {
       alert('Login failed');
-      console.log(username)
-      console.log(data)
       return;
     }
-    this.loggedUser = username;
+    const user = new User();
+    user.id = data.user.id;
+    user.name = data.user.name;
+    user.token = data.token;
+    this.currentUser = user;
+    this.userSubject.next(this.currentUser);
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     localStorage.setItem('username', username);
-    this.storeJwtTokens(data.token);
   }
 
   private logoutUser() {
-    this.loggedUser = null;
+    this.currentUser = null;
+    this.userSubject.next(this.currentUser);
+    localStorage.removeItem('currentUser');
     localStorage.removeItem('username');
-    this.deleteJwtTokens();
   }
 
-  getJwtToken() {
-    return localStorage.getItem(this.NAME_JWT_TOKEN);
-  }
-
-  private storeJwtTokens(token) {
-    localStorage.setItem(this.NAME_JWT_TOKEN, token);
-  }
-
-  private deleteJwtTokens() {
-    localStorage.removeItem(this.NAME_JWT_TOKEN);
-  }
 
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

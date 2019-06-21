@@ -1,3 +1,21 @@
+
 canvas {
-    min-width: 100%;
+
+  top: 200px;
+  right: 100px;
+
+  z-index: 9999;
+  position: absolute;
+  border-radius: 5px;
+  box-shadow: 0px 2px 7px 0px #000;
+
+  transition: box-shadow .2s;
+
+  cursor: move;
+  cursor: grab;
+
+  &:active {
+      cursor: grabbing;
+      box-shadow: 0px 6px 20px 0px #000;
+  }
 }

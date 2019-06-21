@@ -4,7 +4,12 @@
 		"secure": false,
 		"changeOrigin": true
 	},
-  "/auth/login": {
+  "/auth": {
+    "target": "http://butje.remi.im:8083",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/projects": {
     "target": "http://butje.remi.im:8083",
     "secure": false,
     "changeOrigin": true

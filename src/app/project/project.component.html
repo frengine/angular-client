@@ -1,0 +1,10 @@
+<p>
+  project works!
+</p>
+
+<h2>Shaders</h2>
+
+<div *ngFor="let p of projects">
+	{{ p.name }}
+	Updated <span *ngIf="p.modtime > 0">{{p.modtime}}{{ p.modtime | timestring }}</span><span *ngIf="p.modtime == 0">{{ p.created | timestring }}</span> ago
+</div>
