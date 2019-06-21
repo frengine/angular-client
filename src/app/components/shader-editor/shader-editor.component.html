@@ -12,12 +12,15 @@
       <mat-panel-title>
         Available uniforms
       </mat-panel-title>
-      <!-- <mat-panel-description>
-        hi
-      </mat-panel-description> -->
+
     </mat-expansion-panel-header>
 
-    hoi
+    
+    <div *ngFor="let uniform of editorService.uniformArray">
+
+      {{uniform.name}}: {{uniform.value}}
+
+    </div>
   </mat-expansion-panel>
 
   <div fxFlex="auto">
