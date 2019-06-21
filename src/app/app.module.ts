@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './login/register.component';
+import { ProjectComponent } from './project/project.component';
 import { ShaderTestComponent } from './shader-test/shader-test.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
@@ -24,6 +25,7 @@ import { JwtInterceptor } from './_helpers/jwt.interceptor';
     AppComponent,
     LoginComponent,
     RegisterComponent,
+    ProjectComponent,
     ShaderTestComponent,
     HeaderComponent,
     ShaderEditorComponent,
