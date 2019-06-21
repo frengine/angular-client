@@ -19,6 +19,7 @@ import { ShaderViewerComponent } from './components/shader-viewer/shader-viewer.
 import { ShaderLogViewerComponent } from './components/shader-log-viewer/shader-log-viewer.component';
 import { FloatPickerComponent } from './components/code-pickers/float-picker.component';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
+import { TimestringPipe } from './pipes/timestring.pipe'
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { JwtInterceptor } from './_helpers/jwt.interceptor';
     ShaderViewerComponent,
     ShaderLogViewerComponent,
     FloatPickerComponent,
+    TimestringPipe,
   ],
   imports: [
     BrowserModule,
@@ -41,7 +43,7 @@ import { JwtInterceptor } from './_helpers/jwt.interceptor';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MonacoEditorModule
+    MonacoEditorModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
