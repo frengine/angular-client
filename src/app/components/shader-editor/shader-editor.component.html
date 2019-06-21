@@ -1,7 +1,7 @@
 <div fxLayout="column" style="height: 100%">
 
-  <mat-tab-group fxFlex="none" animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="selectedTab"
-    (selectedIndexChange)="selectedTab = $event">
+  <mat-tab-group fxFlex="none" animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="editorService.tabIndex"
+    (selectedIndexChange)="editorService.tabIndex = $event">
   
     <mat-tab label="Vertex shader"></mat-tab>
     <mat-tab label="Fragment shader"></mat-tab>
@@ -21,9 +21,9 @@
   </mat-expansion-panel>
 
   <div fxFlex="auto">
-    <ngx-monaco-editor #vertEditor [options]="editorOptions" [style.display]="selectedTab == 0 ? 'block' : 'none'" [(ngModel)]="editorService.shader.vertSource"></ngx-monaco-editor>
+    <ngx-monaco-editor #vertEditor [options]="editorOptions" [style.display]="editorService.tabIndex == 0 ? 'block' : 'none'" [(ngModel)]="editorService.shader.vertSource"></ngx-monaco-editor>
     
-    <ngx-monaco-editor #fragEditor [style.display]="selectedTab == 1 ? 'block' : 'none'" [options]="editorOptions" [(ngModel)]="editorService.shader.fragSource"></ngx-monaco-editor>
+    <ngx-monaco-editor #fragEditor [style.display]="editorService.tabIndex == 1 ? 'block' : 'none'" [options]="editorOptions" [(ngModel)]="editorService.shader.fragSource"></ngx-monaco-editor>
   </div>
 </div>
 

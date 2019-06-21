@@ -39,8 +39,6 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
   vertEditor: monaco.editor.IStandaloneCodeEditor
   fragEditor: monaco.editor.IStandaloneCodeEditor
 
-  selectedTab: number = 0
-  
   @ViewChild('floatPicker') floatPicker : FloatPickerComponent; 
 
   private lastCompileResult: CompileResult
@@ -85,6 +83,7 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
   }
 
   goTo(vertOrFrag: number, line: number) {
+    this.editorService.tabIndex = vertOrFrag
     let editor = vertOrFrag == 0 ? this.vertEditor : this.fragEditor
 
     editor.focus()

@@ -14,13 +14,6 @@
 
   height: 32px;
   overflow: hidden;
-  animation: entry-in .2s ease-out;
-
-  @keyframes entry-in {
-    0% {
-      height: 0;
-    }
-  }
 }
 
 .log-entry-type0 {
