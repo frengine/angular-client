@@ -19,8 +19,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loginService.login(this.username.value, this.password.value)
-      .subscribe(data => { console.log(data); });
+    this.loginService.login(this.username.value, this.password.value);
   }
 
 }

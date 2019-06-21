@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ShaderTestComponent } from './shader-test/shader-test.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './components/header/header.component';
 
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
@@ -16,6 +16,7 @@ import { ShaderEditorComponent } from './components/shader-editor/shader-editor.
 import { ShaderViewerComponent } from './components/shader-viewer/shader-viewer.component';
 import { ShaderLogViewerComponent } from './components/shader-log-viewer/shader-log-viewer.component';
 import { FloatPickerComponent } from './components/code-pickers/float-picker.component';
+import { JwtInterceptor } from './_helpers/jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,9 @@ import { FloatPickerComponent } from './components/code-pickers/float-picker.com
     HttpClientModule,
     MonacoEditorModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

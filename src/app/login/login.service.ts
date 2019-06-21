@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map, mapTo, tap} from 'rxjs/operators';
 import {Tokens} from './tokens';
+import {User} from './user';
 
 @Injectable({
   providedIn: 'root',
@@ -12,18 +13,19 @@ export class LoginService {
 
   private readonly NAME_JWT_TOKEN = 'JWT_token';
   private baseUrl = '';
-  private loggedUser: string;
+  currentUser: User;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
 
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post(this.baseUrl + '/auth/login', {
-      login: username,
-      password: password
-    }).pipe(
-      tap(tokens => this.loginUser(username, tokens)),
-      mapTo(true)
-    );
+  async login(login: string, password: string) {
+    const res = this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise();
+    res.then(() => {
+      this.loginUser(login, res);
+    }).catch((e) => {
+      console.log(e);
+    });
   }
 
   logout(userId: string, tokens: Tokens): Observable<any> {
@@ -36,34 +38,23 @@ export class LoginService {
   }
 
   private loginUser(username: string, data: any) {
-    if (data.success !== true) {
-      alert('Login failed');
-      console.log(username)
-      console.log(data)
-      return;
-    }
-    this.loggedUser = username;
+    // if (data.success !== true) {
+    //   alert('Login failed');
+    //   console.log(username);
+    //   console.log(data);
+    //   return;
+    // }
+    this.currentUser = data;
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     localStorage.setItem('username', username);
-    this.storeJwtTokens(data.token);
   }
 
   private logoutUser() {
-    this.loggedUser = null;
+    this.currentUser = null;
+    localStorage.removeItem('currentUser');
     localStorage.removeItem('username');
-    this.deleteJwtTokens();
   }
 
-  getJwtToken() {
-    return localStorage.getItem(this.NAME_JWT_TOKEN);
-  }
-
-  private storeJwtTokens(token) {
-    localStorage.setItem(this.NAME_JWT_TOKEN, token);
-  }
-
-  private deleteJwtTokens() {
-    localStorage.removeItem(this.NAME_JWT_TOKEN);
-  }
 
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
