@@ -5,6 +5,7 @@ import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map, mapTo, tap} from 'rxjs/operators';
 import {Tokens} from './tokens';
 import {User} from './user';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class LoginService {
   currentUser: User;
   userSubject = new Subject();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -25,6 +26,7 @@ export class LoginService {
       .then((body) => {
       this.loginUser(login, body);
       console.log(body);
+      this.router.navigate(['']);
     }).catch((e) => {
       console.log(e);
     });
