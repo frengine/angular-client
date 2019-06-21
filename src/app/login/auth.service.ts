@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
-export class LoginService {
+export class AuthService {
 
   private readonly NAME_JWT_TOKEN = 'JWT_token';
   private baseUrl = '';
@@ -22,7 +22,7 @@ export class LoginService {
   }
 
   async login(login: string, password: string) {
-    const res = this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise()
+    this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise()
       .then((body) => {
       this.loginUser(login, body);
       console.log(body);
