@@ -11,13 +11,17 @@ export class RegisterComponent implements OnInit {
 
   username = new FormControl('');
   password = new FormControl('');
+  password2 = new FormControl('');
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {}
 
   onSubmit() {
-    // this.loginService.login(this.username.value, this.password.value);
+    if (this.password.value !== this.password2.value) {
+      alert('Password does\'t match');
+    }
+    this.authService.register(this.username.value, this.password.value);
   }
 
 }
