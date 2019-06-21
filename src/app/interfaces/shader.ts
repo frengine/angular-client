@@ -15,7 +15,13 @@ void main(void) {
 `
 
 export const DEFAULT_FRAG_CODE = `
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+uniform float u_time;
+
 void main(void) {
-  gl_FragColor = vec4(gl_FragCoord.x / 640.0, gl_FragCoord.y / 480.0, 0, 1);
+	gl_FragColor = vec4(abs(sin(u_time)), 0.0, 0.0, 1.0);
 }
 `

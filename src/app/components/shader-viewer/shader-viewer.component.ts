@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { Shader } from 'src/app/interfaces/shader';
 import { ShaderService, CompileResult } from 'src/app/services/shader.service';
 
@@ -7,7 +7,7 @@ import { ShaderService, CompileResult } from 'src/app/services/shader.service';
   templateUrl: './shader-viewer.component.html',
   styleUrls: ['./shader-viewer.component.scss']
 })
-export class ShaderViewerComponent implements OnInit {
+export class ShaderViewerComponent implements OnInit, OnDestroy {
 
   @Input() shader: Shader
   @Output() onCompileResults: EventEmitter<CompileResult> = new EventEmitter()
@@ -17,9 +17,19 @@ export class ShaderViewerComponent implements OnInit {
   gl: WebGLRenderingContext
   shaderProgram: WebGLProgram
 
+  interval = null
+  startTime = null
+
   constructor(
     private shaderService: ShaderService
-  ) { }
+  ) {
+    this.startTime = Date.now() / 1000;
+    this.interval = setInterval(()=>this.render(), 20);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.interval);
+  }
 
   ngOnInit() {
 
@@ -65,6 +75,8 @@ export class ShaderViewerComponent implements OnInit {
    * Renders the frame using this.shaderProgram
    */
   render() {
+    console.log("Render");
+
     this.gl.useProgram(this.shaderProgram);
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
@@ -79,9 +91,14 @@ export class ShaderViewerComponent implements OnInit {
         1.0, 1.0]),
       this.gl.STATIC_DRAW
     );
+    
     const positionLocation = this.gl.getAttribLocation(this.shaderProgram, 'a_position');
     this.gl.enableVertexAttribArray(positionLocation);
     this.gl.vertexAttribPointer(positionLocation, 2, this.gl.FLOAT, false, 0, 0);
+    
+    const timeLocation = this.gl.getUniformLocation(this.shaderProgram, "u_time");
+    this.gl.uniform1f(timeLocation, (Date.now() / 1000) - this.startTime)
+
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 
