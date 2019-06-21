@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 
-import {Observable, throwError} from 'rxjs';
+import {Observable, Subject, throwError} from 'rxjs';
 import {catchError, map, mapTo, tap} from 'rxjs/operators';
 import {Tokens} from './tokens';
 import {User} from './user';
@@ -14,15 +14,17 @@ export class LoginService {
   private readonly NAME_JWT_TOKEN = 'JWT_token';
   private baseUrl = '';
   currentUser: User;
+  userSubject = new Subject();
 
   constructor(private http: HttpClient) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
   async login(login: string, password: string) {
-    const res = this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise();
-    res.then(() => {
-      this.loginUser(login, res);
+    const res = this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise()
+      .then((body) => {
+      this.loginUser(login, body);
+      console.log(body);
     }).catch((e) => {
       console.log(e);
     });
@@ -45,12 +47,14 @@ export class LoginService {
     //   return;
     // }
     this.currentUser = data;
+    this.userSubject.next(this.currentUser);
     localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     localStorage.setItem('username', username);
   }
 
   private logoutUser() {
     this.currentUser = null;
+    this.userSubject.next(this.currentUser);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('username');
   }

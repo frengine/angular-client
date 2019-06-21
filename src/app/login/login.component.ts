@@ -12,8 +12,7 @@ export class LoginComponent implements OnInit {
   username = new FormControl('');
   password = new FormControl('');
 
-  constructor(private loginService: LoginService) {
-  }
+  constructor(private loginService: LoginService) {}
 
   ngOnInit() {
   }

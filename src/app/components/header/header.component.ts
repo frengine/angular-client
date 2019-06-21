@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {LoginService} from '../../login/login.service';
 
 @Component({
   selector: 'app-header',
@@ -9,16 +10,22 @@ export class HeaderComponent implements OnInit {
 
   headerText = 'Niet ingelogd';
 
-  constructor() { }
+  constructor(private loginService: LoginService) {
+  }
 
   ngOnInit() {
     this.showUsername();
+    let subscription = this.loginService.userSubject.subscribe((x) => {
+      this.showUsername(x.user.name);
+    });
   }
 
-  showUsername() {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      this.headerText = `Welcome ${storedUsername}`;
+  showUsername(name = null) {
+    if (name == null) {
+      name = localStorage.getItem('username');
+    }
+    if (name) {
+      this.headerText = `Welcome ${name}`;
     }
   }
 
