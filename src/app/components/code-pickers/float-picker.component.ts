@@ -11,7 +11,7 @@ import { ShaderEditorService } from 'src/app/services/shader-editor.service';
     'height.px': height,
     'top.px': top, 
     'left.px': left
-  }" id="float-picker"> <mat-slider [max]="sliderMax" [min]="sliderMin" (input)="sliderValue=$event.value" [value]="sliderBeginValue" [step]="0.01"></mat-slider>  </div> `,
+  }" id="float-picker"> <mat-slider [max]="sliderMax" [min]="sliderMin" (input)="sliderValue=$event.value" [value]="sliderBeginValue" [step]="sliderStepSize"></mat-slider>  </div> `,
 
   styles: [`
   div { 
@@ -34,36 +34,30 @@ export class FloatPickerComponent implements OnInit {
   private left: number = 0;
   private top: number = 0;
   private element: HTMLElement = null;
-  private editor : monaco.editor.IStandaloneCodeEditor = null;
+  private editor: monaco.editor.IStandaloneCodeEditor = null;
   private correctedElementRange: monaco.Range = null;
-  private oldTextLength: number = null;
+  private lastEditText: string = null;
 
-  public sliderMax : number
-  public sliderMin : number
-  private sliderBeginValue : number
+  public sliderMax: number
+  public sliderMin: number
+  public sliderStepSize: number
+  public sliderBeginValue: number
 
   public set sliderValue(val: number) {
     let newValue: string = ""
     if (this.element.innerHTML.indexOf(".") != -1) { // if IsFloat
-      newValue = Number(val).toFixed(this.element.innerHTML.split(".")[1].length);
-      if (this.element.innerHTML.indexOf(".") != -1) // 0. is valid in CG
+      let decimals: number = this.element.innerHTML.split(".")[1].length;
+      newValue = Number(val).toFixed(decimals);
+      if (decimals == 0) // 0. is valid in CG
         newValue += "."
+    } else { // If isInt
+      newValue = val.toFixed(0);
     }
-    newValue = Number(val).toString()
 
-    this.update({ range: this.correctedElementRange, text: newValue })
-    
-    this.correctedElementRange = new monaco.Range( // We need to correct for the new length
-      this.correctedElementRange.startLineNumber,
-      this.correctedElementRange.startColumn,
-      this.correctedElementRange.endLineNumber,
-      this.correctedElementRange.endColumn + (newValue.length - this.oldTextLength)
-    );
-
-    this.oldTextLength = newValue.length
+    this.update({ range: this.correctedElementRange, text: newValue });    
   }
 
-  constructor(private editorService : ShaderEditorService) { }
+  constructor(private editorService: ShaderEditorService) { }
   ngOnInit() { }
 
   private setPosition(x:number, y:number) {
@@ -71,19 +65,20 @@ export class FloatPickerComponent implements OnInit {
     this.top = y + 15;
   }
 
-  setPicker(e : monaco.editor.IEditorMouseEvent, editor : monaco.editor.IStandaloneCodeEditor) {
+  setPicker(e: monaco.editor.IEditorMouseEvent, editor: monaco.editor.IStandaloneCodeEditor) {
     this.show = true;
 
     this.element = e.target.element as HTMLElement; 
     this.editor = editor;
     this.setPosition(e.event.posx, e.event.posy);   
 
-    let elementValue: number = Number(this.element.innerHTML);
-    this.oldTextLength = elementValue.toString().length
+    this.lastEditText = this.element.innerHTML;
+    let elementValue: number = Number(this.lastEditText);
 
     this.sliderMin = elementValue - 1;
     this.sliderMax = elementValue + 1;
     this.sliderBeginValue = elementValue;
+    this.sliderStepSize = (this.lastEditText.indexOf(".") == -1)? 1 : 0.01;
 
     let correctedStartCollumn: number = this.getCorrectedStartCollumn(e.target.range);
 
@@ -95,23 +90,39 @@ export class FloatPickerComponent implements OnInit {
     )
   }
 
-  private getCorrectedStartCollumn(range : monaco.Range) {
+  private getCorrectedStartCollumn(range: monaco.Range) {
     let codeTextLine: string = this.editorService.getReadOnlyShaderText().split("\n")[range.startLineNumber - 1];
     let i: number = range.startColumn;
-    while (codeTextLine.charAt(i-1).match(/[0-9]|.|-/) == null && i >= 0) { i--; }
-    return i
+    while (codeTextLine.charAt(i-1).match(/[0-9|.|-]/) != null && i >= 0) { i--; }
+    return i + 1
   }
 
-  setActive(bool: boolean) {
+  private correctRange(newValue: string) {
+    this.correctedElementRange = new monaco.Range( // We need to correct for the new length
+      this.correctedElementRange.startLineNumber,
+      this.correctedElementRange.startColumn,
+      this.correctedElementRange.endLineNumber,
+      this.correctedElementRange.endColumn + ((this.lastEditText != null)? (newValue.length - this.lastEditText.length) : 0)
+    );
+  }
+
+  setActive(bool: boolean) {  
+    if (this.show != bool) { // If we clicked away we need to save
+      this.save({range: this.correctedElementRange, text: this.lastEditText})
+    }
+
     this.show = bool;
   }
 
-  update(edit : monaco.editor.IIdentifiedSingleEditOperation) {
+  update(edit: monaco.editor.IIdentifiedSingleEditOperation) {
+    this.lastEditText = edit.text;
+    this.correctRange(edit.text);
     this.editor.getModel().applyEdits([edit]);
     this.editorService.onChange.emit()
   }
 
-  save(edit : monaco.editor.IIdentifiedSingleEditOperation) {
-    // TODO
+  save(edit: monaco.editor.IIdentifiedSingleEditOperation) { // RIP DOES NOT WORK
+    this.editor.executeEdits("sliderEdit", [edit]);
+    this.editorService.onChange.emit()
   }
 }
