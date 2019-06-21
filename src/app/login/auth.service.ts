@@ -24,12 +24,12 @@ export class AuthService {
   async login(login: string, password: string) {
     this.http.post<any>(this.baseUrl + '/auth/login', {login, password}).toPromise()
       .then((body) => {
-      this.loginUser(login, body);
-      console.log(body);
-      this.router.navigate(['']);
-    }).catch((e) => {
-      console.log(e);
-    });
+        this.loginUser(login, body);
+        console.log(body);
+        this.router.navigate(['']);
+      }).catch((e) => {
+        console.log(e);
+      });
   }
 
   logout(userId: string, tokens: Tokens): Observable<any> {
@@ -39,6 +39,16 @@ export class AuthService {
     }).pipe(
       tap(() => this.logoutUser()),
     );
+  }
+
+  async register(name: string, password: string) {
+    this.http.post<any>('/auth/register', {name, password, password2: password}).toPromise()
+      .then((body) => {
+        console.log('Register succeed');
+        this.login(name, password);
+      }).catch((e) => {
+      console.log(e);
+    });
   }
 
   private loginUser(username: string, data: any) {
