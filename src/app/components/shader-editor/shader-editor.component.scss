@@ -12,7 +12,10 @@ ngx-monaco-editor {
   margin: 20px 30px;
   background: #44475f;
   ::ng-deep * {
-    color: white !important;
+    color: white;
+    
+    .mtk8 { color: rgb(128, 163, 187); }
+    .mtk7 { color: #608b4e; }
 
     .mat-expansion-indicator {
       filter: invert(1);

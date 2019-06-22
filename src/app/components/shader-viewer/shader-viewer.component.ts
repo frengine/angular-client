@@ -105,19 +105,19 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
       u_time: {
         name: "u_time",
         type: "float",
-        description: "je moeder",
+        description: "Time sinds start, in seconds",
         value: 0
       },
       u_mouse: {
         name: "u_mouse",
         type: "vec2",
-        description: "Mouse position on screen, range (0 - 1)",
+        description: "Mouse position on screen, range 0 - 1",
         value: "(0, 0)"
       },
       u_resolution: {
         name: "u_resolution",
         type: "ivec2",
-        description: "Screen resolution in pixels",
+        description: "Screen resolution, in pixels",
         value: "(0, 0)"
       },
     }

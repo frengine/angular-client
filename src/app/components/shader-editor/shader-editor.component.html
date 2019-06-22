@@ -18,7 +18,9 @@
     
     <div *ngFor="let uniform of editorService.uniformArray">
 
-      {{uniform.name}}: {{uniform.value}}
+      <span class="mtk8">uniform {{uniform.type}}</span> 
+      {{uniform.name}}; 
+      <span class="mtk7">// {{uniform.description}} {{uniform.value}}</span>
 
     </div>
   </mat-expansion-panel>
