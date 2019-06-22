@@ -33,8 +33,16 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     this.interval = setInterval(()=>this.render(), 20);
   }
 
+  @HostListener('window:keydown', ['$event']) // u_mouse
+  onKeydown(e: KeyboardEvent) { 
+    if ((e.ctrlKey || e.metaKey) && String.fromCharCode(e.which).toLowerCase() == "s") { // ctrl + s
+      this.compileAndRender();
+      e.preventDefault()
+    }
+  }
+  
   @HostListener('window:mousemove', ['$event']) // u_mouse
-  onmousemove(e) { 
+  onMousemove(e) { 
     let rect: DOMRect = this.glCanvas.nativeElement.getBoundingClientRect();
     let x = Math.max(Math.min(e.x - rect.x, rect.width), 0) | 0;
     let y = Math.max(Math.min(e.y - rect.y, rect.height), 0) | 0;

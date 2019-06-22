@@ -107,22 +107,14 @@ export class FloatPickerComponent implements OnInit {
   }
 
   setActive(bool: boolean) {  
-    if (this.show != bool) { // If we clicked away we need to save
-      this.save({range: this.correctedElementRange, text: this.lastEditText})
-    }
-
     this.show = bool;
   }
 
   update(edit: monaco.editor.IIdentifiedSingleEditOperation) {
     this.correctRange(edit.text);
-    this.editor.getModel().applyEdits([edit]);
-    this.editorService.onChange.emit()
-    this.lastEditText = edit.text;
-  }
-
-  save(edit: monaco.editor.IIdentifiedSingleEditOperation) { // RIP DOES NOT WORK
+    // this.editor.getModel().applyEdits([edit]); // We should use this and save it on exit but that does not always work
     this.editor.executeEdits("sliderEdit", [edit]);
     this.editorService.onChange.emit()
+    this.lastEditText = edit.text;
   }
 }
