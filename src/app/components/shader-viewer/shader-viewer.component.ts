@@ -24,8 +24,8 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
   startTime = null // u_time
   mousePosX = 0 // u_mouse
   mousePosY = 0
-  screenWidth = null // u_resolution
-  screenHeight = null
+  screenWidth = 600 // u_resolution
+  screenHeight = 350
 
   constructor(
     private shaderService: ShaderService,
@@ -48,29 +48,30 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     let rect: DOMRect = this.glCanvas.nativeElement.getBoundingClientRect();
     let x = Math.max(Math.min(e.x - rect.x, rect.width), 0) | 0;
     let y = Math.max(Math.min(e.y - rect.y, rect.height), 0) | 0;
-    // console.log(rect, e, this.mousePosX, this.mousePosY);
-    this.onResize(null);
+    
+    this.screenWidth = rect.width | 0;
+    this.screenHeight = rect.height | 0;
     this.mousePosX = x / this.screenWidth;
     this.mousePosY = 1 - y / this.screenHeight;
   }
 
-  @HostListener('window:resize', ['$event']) // u_resolution
-  onResize(e) {
+  @HostListener('window:resize') // u_resolution
+  onResize() {
     let rect: DOMRect = this.glCanvas.nativeElement.getBoundingClientRect();
     this.screenWidth = rect.width | 0;
     this.screenHeight = rect.height | 0;
+    this.render(true);
   }
   
   
   ngOnInit() {
-    this.onResize(null);
-    this.gl = this.glCanvas.nativeElement.getContext('webgl')
-    
-    if (!this.gl) {
-      alert('Unable to initialize WebGL. Your browser or machine may not support it.')
-      return
-    }
-    this.compileAndRender()
+      this.gl = this.glCanvas.nativeElement.getContext('webgl')
+      
+      if (!this.gl) {
+          alert('Unable to initialize WebGL. Your browser or machine may not support it.')
+          return
+        }
+        this.compileAndRender()
   }
 
   ngOnDestroy() {
@@ -89,7 +90,7 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     if (result.vert.success && result.frag.success) {
 
       this.replaceProgram(result.program)
-      this.render()
+      this.render(true)
     } else {
 
       this.gl.deleteProgram(result.program)
@@ -143,8 +144,8 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
   /**
    * Renders the frame using this.shaderProgram
    */
-  render() {
-    if (this.renderOnHover && !this.hovering()) return;
+  render(force?) {
+    if (!force && this.renderOnHover && !this.hovering()) return;
 
     this.gl.useProgram(this.shaderProgram);
     const buffer = this.gl.createBuffer();
