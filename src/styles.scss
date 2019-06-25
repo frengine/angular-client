@@ -5,9 +5,11 @@
 
 @include angular-material-theme($myDefaultTheme);
 
-body {
+body, html {
     margin: 0;
+    padding: 0;
     background: #1e1e1e;
+    overflow: hidden;
 }
 
 .mat-tab-labels {

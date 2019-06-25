@@ -17,7 +17,7 @@ export class ShaderEditorService {
   shader: Shader // the shader to be edited.
   tabIndex: number = 0
 
-  uniforms: {[name: string]: Uniform}
+  uniforms: {[name: string]: Uniform} = {}
 
   get uniformArray(): Uniform[] {
     return Object.values(this.uniforms)

@@ -1,6 +1,6 @@
-<app-shader-viewer #viewer [shader]="shader" (onCompileResults)="editor.showErrorsAndWarnings($event); log.compileResult = $event"></app-shader-viewer>
+<app-shader-viewer #viewer [shader]="shader" [dragable]="!mobile" (onCompileResults)="editor.showErrorsAndWarnings($event); log.compileResult = $event"></app-shader-viewer>
 
-<div fxLayout="column" style="height: 100%">
+<div fxLayout="column" style="height: 100%" *ngIf="!mobile">
     
     <div fxFlex="auto">
         <app-shader-editor #editor [shader]="shader" (onChange)="viewer.compileAndRender()"></app-shader-editor>

@@ -1,1 +1,2 @@
-<canvas #glCanvas id="glCanvas" width="500" height="350" cdkDrag cdkDragBoundary="body"></canvas>
+
+<canvas #glCanvas id="glCanvas" [class]="dragable ? 'dragable' : 'not-dragable'" width="500" height="350" cdkDrag cdkDragBoundary="body"></canvas>

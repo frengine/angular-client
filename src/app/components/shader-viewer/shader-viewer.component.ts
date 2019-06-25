@@ -11,6 +11,8 @@ import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 export class ShaderViewerComponent implements OnInit, OnDestroy {
 
   @Input() shader: Shader
+  @Input() dragable: boolean = true
+  @Input() renderOnHover: boolean = false
   @Output() onCompileResults: EventEmitter<CompileResult> = new EventEmitter()
 
   @ViewChild("glCanvas") glCanvas: ElementRef
@@ -133,11 +135,17 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
 
   a_positionLocation
   u_timeLocation; u_mouseLocation; u_resolutionLocation;
+
+  hovering(): boolean {
+      return this.mousePosX > 0 && this.mousePosX < 1 && this.mousePosY > 0 && this.mousePosY < 1
+  }
   
   /**
    * Renders the frame using this.shaderProgram
    */
   render() {
+    if (this.renderOnHover && !this.hovering()) return;
+
     this.gl.useProgram(this.shaderProgram);
     const buffer = this.gl.createBuffer();
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
