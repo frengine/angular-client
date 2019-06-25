@@ -5,6 +5,7 @@
   <br>
 
   <div *ngFor="let p of projects">
+    <app-shader-viewer [renderOnHover]="true" [shader]="p.shader"></app-shader-viewer>
     <a [routerLink]="['/shader/'+ p.id]">{{ p.name }}</a>
     Updated <span>{{ p.touched | timestring }}</span> ago
     <a [routerLink]="['/project/rename/' + p.id]">[rename]</a>
