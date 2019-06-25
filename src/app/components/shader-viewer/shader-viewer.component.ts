@@ -20,8 +20,8 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
 
   interval = null
   startTime = null // u_time
-  mousePosX = null // u_mouse
-  mousePosY = null
+  mousePosX = 0 // u_mouse
+  mousePosY = 0
   screenWidth = null // u_resolution
   screenHeight = null
 
