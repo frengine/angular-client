@@ -11,6 +11,6 @@ export class ShaderProjectResolver implements Resolve<Project> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any>|Promise<any>|any {
-    return this.projectService.find(route.params.shaderId);
+    return this.projectService.find(route.params.shaderId); // TODO: Add request for content
   }
 }
