@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 
 import {Observable, Subject, throwError} from 'rxjs';
-import {catchError, map, mapTo, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {Tokens} from './tokens';
 import {User} from './user';
 import {Router} from '@angular/router';
@@ -28,6 +28,7 @@ export class AuthService {
         console.log(body);
         this.router.navigate(['']);
       }).catch((e) => {
+        alert("ERROR: please check you login details");
         console.log(e);
       });
   }
@@ -47,6 +48,7 @@ export class AuthService {
         console.log('Register succeed');
         this.login(name, password);
       }).catch((e) => {
+        alert("ERROR: " + e.error.error);
       console.log(e);
     });
   }
@@ -71,6 +73,7 @@ export class AuthService {
     this.userSubject.next(this.currentUser);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('username');
+    location.href = "/";
   }
 
 

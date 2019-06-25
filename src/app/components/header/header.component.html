@@ -1,8 +1,9 @@
 <mat-toolbar>
     <a mat-button routerLink="/">home</a>
     <a mat-button routerLink="/shader">shader</a>
-    <a mat-button routerLink="/login">login</a>
-    <a mat-button routerLink="/register">register</a>
+    <a *ngIf="loginService.currentUser == null" mat-button routerLink="/login">login</a>
+    <a *ngIf="loginService.currentUser == null" mat-button routerLink="/register">register</a>
+    <a *ngIf="loginService.currentUser" mat-button (click)="loginService.logoutUser()">logout</a>
     <span class="toolbar-spacer"></span>
     <span>{{ headerText }}</span>
 </mat-toolbar>

@@ -25,6 +25,7 @@ import { TimestringPipe } from './pipes/timestring.pipe'
 import {NewProjectComponent} from './project/new/newproject.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { ShaderProjectResolver } from './project/shader.resolver';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { environment } from '../environments/environment';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
+    ShaderProjectResolver,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
