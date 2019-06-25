@@ -23,6 +23,7 @@ import { FloatPickerComponent } from './components/code-pickers/float-picker.com
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { TimestringPipe } from './pipes/timestring.pipe'
 import {NewProjectComponent} from './project/new/newproject.component';
+import { ShaderProjectResolver } from './project/shader.resolver';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import {NewProjectComponent} from './project/new/newproject.component';
     MonacoEditorModule,
   ],
   providers: [
+    ShaderProjectResolver,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
