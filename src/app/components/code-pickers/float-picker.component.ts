@@ -28,20 +28,20 @@ import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 })
 
 export class FloatPickerComponent implements OnInit {
-  private show: boolean = false;
-  private width: number = 150
-  private height: number = 40;
-  private left: number = 0;
-  private top: number = 0;
+  show: boolean = false;
+  width: number = 150
+  height: number = 40;
+  left: number = 0;
+  top: number = 0;
   private element: HTMLElement = null;
   private editor: monaco.editor.IStandaloneCodeEditor = null;
   private correctedElementRange: monaco.Range = null;
   private lastEditText: string = null;
 
-  public sliderMax: number
-  public sliderMin: number
-  public sliderStepSize: number
-  public sliderBeginValue: number
+  sliderMax: number
+  sliderMin: number
+  sliderStepSize: number
+  sliderBeginValue: number
 
   public set sliderValue(val: number) {
     let newValue: string = ""
