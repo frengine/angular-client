@@ -14,6 +14,7 @@ export interface Project {
   modtime: number;
   created: number;
   touched: number;
+  shader: Shader;
 }
 
 @Injectable({
@@ -33,9 +34,8 @@ export class ProjectService {
     return this.http.get<Project>(`${this.baseURL}/${id}`);
   }
 
-  fetchContentByIf(id: Number) {
-    return this.http.get<string>(`${this.baseURL}/${id}/revision`)
-      .subscribe((response) => JSON.parse(response));
+  fetchContentById(id: Number) {
+    return this.http.get<any>(`${this.baseURL}/${id}/revision`);
   }
 
   setContent(id: Number, data: Shader) {
