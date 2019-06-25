@@ -23,6 +23,8 @@ import { FloatPickerComponent } from './components/code-pickers/float-picker.com
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { TimestringPipe } from './pipes/timestring.pipe'
 import {NewProjectComponent} from './project/new/newproject.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,7 @@ import {NewProjectComponent} from './project/new/newproject.component';
     ReactiveFormsModule,
     HttpClientModule,
     MonacoEditorModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

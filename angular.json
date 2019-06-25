@@ -25,9 +25,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-
-              // monaco-editor:
-              { "glob": "**/*", "input": "node_modules/monaco-editor", "output": "assets/monaco-editor/" }
+              {
+                "glob": "**/*",
+                "input": "node_modules/monaco-editor",
+                "output": "assets/monaco-editor/"
+              },
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss"
@@ -57,7 +60,8 @@
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
                 }
-              ]
+              ],
+              "serviceWorker": true
             }
           }
         },
@@ -91,7 +95,8 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ]
           }
         },
