@@ -12,6 +12,7 @@ export interface Project {
   author: Author;
   modtime: number;
   created: number;
+  touched: number;
 }
 
 @Injectable({
