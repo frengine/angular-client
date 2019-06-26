@@ -163,6 +163,8 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     );
 
     this.gl.viewport(0, 0, this.screenWidth, this.screenHeight);
+    this.glCanvas.nativeElement.width = this.screenWidth
+    this.glCanvas.nativeElement.height = this.screenHeight
     
     this.gl.enableVertexAttribArray(this.a_positionLocation);
     this.gl.vertexAttribPointer(this.a_positionLocation, 2, this.gl.FLOAT, false, 0, 0);
