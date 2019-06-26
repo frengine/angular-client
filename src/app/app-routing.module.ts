@@ -5,7 +5,8 @@ import { ProjectComponent } from './project/project.component';
 import {ShaderTestComponent} from './shader-test/shader-test.component';
 import {RegisterComponent} from './login/register.component';
 import {NewProjectComponent} from './project/new/newproject.component';
-import { ShaderProjectResolver } from './project/shader.resolver';
+import {ProjectResolver} from './project/project.resolver';
+import {ShaderResolver} from './project/shader.resolver';
 
 const routes: Routes = [
   { path: '', component: ProjectComponent },
@@ -17,7 +18,8 @@ const routes: Routes = [
     path: 'shader/:shaderId',
     component: ShaderTestComponent,
     resolve: {
-      project: ShaderProjectResolver
+      project: ProjectResolver,
+      shader: ShaderResolver
     }
   }
 ];

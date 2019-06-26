@@ -1,10 +1,11 @@
-import { Component, ViewChild, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
+import {Component, ViewChild, Input, Output, EventEmitter, DoCheck, OnInit, HostListener} from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
 import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.service';
 import { FloatPickerComponent } from 'src/app/components/code-pickers/float-picker.component';
 import { ShaderEditorService } from 'src/app/services/shader-editor.service';
+import {Project, ProjectService} from '../../project/project.service';
 
 @Component({
   selector: 'app-shader-editor',
@@ -13,10 +14,11 @@ import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 })
 export class ShaderEditorComponent implements DoCheck, OnInit {
 
-  @Input() shader: Shader // the shader to be edited.
-  @Output() onChange: EventEmitter<any>
-  
-  constructor(public editorService : ShaderEditorService) {
+  @Input() shader: Shader; // the shader to be edited.
+  @Input() project: Project;
+  @Output() onChange: EventEmitter<any>;
+
+  constructor(public editorService : ShaderEditorService, private projectService: ProjectService) {
     this.onChange = editorService.onChange;
   }
 
@@ -138,4 +140,14 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
     this.onChange.emit()
   }
 
+  @HostListener('window:keydown', ['$event']) // u_mouse
+  onKeydown(e: KeyboardEvent) {
+    if ((e.ctrlKey || e.metaKey) && String.fromCharCode(e.which).toLowerCase() == "s") { // ctrl + s
+      this.projectService.setContent(this.project.id, this.shader)
+        .subscribe( (x) => {
+          console.log("saveddd", x);
+        });
+      e.preventDefault()
+    }
+  }
 }

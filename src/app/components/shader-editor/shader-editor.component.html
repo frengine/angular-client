@@ -1,5 +1,14 @@
 <div fxLayout="column" style="height: 100%">
 
+  <div fxFlex="none">
+    <div *ngIf="project.name;else noprojectname">
+      <h2>{{ project.name }}</h2>
+    </div>
+    <ng-template #noprojectname>
+      <h2 #noprojectname>Geen naam</h2>
+    </ng-template>
+  </div>
+
   <mat-tab-group fxFlex="none" animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="editorService.tabIndex"
     (selectedIndexChange)="editorService.tabIndex = $event">
   

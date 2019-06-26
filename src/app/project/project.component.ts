@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ProjectService, Project} from './project.service';
-import {DEFAULT_FRAG_CODE, DEFAULT_VERT_CODE, Shader} from '../interfaces/shader';
+import {Project, ProjectService} from './project.service';
+import {Shader} from '../interfaces/shader';
 
 @Component({
   selector: 'app-project',
@@ -28,9 +28,8 @@ export class ProjectComponent implements OnInit {
         this.projects = data;
 
         for (const project of this.projects) {
-          project.shader = {} as Shader;
-          project.shader.vertSource = DEFAULT_VERT_CODE;
-          project.shader.fragSource = DEFAULT_FRAG_CODE;
+          const rev = project.revision;
+          project.shader = JSON.parse(rev.content) as Shader;
         }
         console.log(this.projects);
       }

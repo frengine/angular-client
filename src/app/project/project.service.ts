@@ -14,6 +14,7 @@ export interface Project {
   modtime: number;
   created: number;
   touched: number;
+  revision: object;
   shader: Shader;
 }
 

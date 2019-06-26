@@ -5,7 +5,7 @@
     <app-shader-viewer #viewer [shader]="shader" (onCompileResults)="editor.showErrorsAndWarnings($event); log.compileResult = $event"></app-shader-viewer>
 
     <div fxFlex="auto">
-        <app-shader-editor #editor [shader]="shader" (onChange)="viewer.compileAndRender()"></app-shader-editor>
+        <app-shader-editor #editor [shader]="shader" [project]="project" (onChange)="viewer.compileAndRender()"></app-shader-editor>
     </div>
     <div fxFlex="none">
         <app-shader-log-viewer #log (goTo)="editor.goTo($event.vertOrFrag, $event.line)"></app-shader-log-viewer>

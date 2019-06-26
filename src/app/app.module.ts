@@ -21,11 +21,12 @@ import { ShaderViewerComponent } from './components/shader-viewer/shader-viewer.
 import { ShaderLogViewerComponent } from './components/shader-log-viewer/shader-log-viewer.component';
 import { FloatPickerComponent } from './components/code-pickers/float-picker.component';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
-import { TimestringPipe } from './pipes/timestring.pipe'
+import { TimestringPipe } from './pipes/timestring.pipe';
 import {NewProjectComponent} from './project/new/newproject.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { ShaderProjectResolver } from './project/shader.resolver';
+import { ProjectResolver } from './project/project.resolver';
+import { ShaderResolver } from './project/shader.resolver';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { ShaderProjectResolver } from './project/shader.resolver';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
-    ShaderProjectResolver,
+    ProjectResolver,
+    ShaderResolver,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
