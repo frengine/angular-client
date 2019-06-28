@@ -150,7 +150,7 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
   u_timeLocation; u_mouseLocation; u_resolutionLocation; u_mouseDirLocation;
 
   hovering(): boolean {
-      return this.mousePosX > 0 && this.mousePosX < 1 && this.mousePosY > 0 && this.mousePosY < 1
+      return this.mousePosX > 0 && this.mousePosX < 1 && this.mousePosY > 0.01 && this.mousePosY < 1
   }
   
   /**
