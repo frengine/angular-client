@@ -1,19 +1,22 @@
-<div style="padding: 10px;
-    overflow-y: scroll;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    position: absolute;">
-  <h2>Shaders</h2>
-  <a [routerLink]="['/project/new']">New Project</a>
-  <br>
-  <br>
+<div class="flex-item">
+  <div class="container">
+    <h2>Shaders</h2>
+    <a (click)="createNewProject()">New Project</a>
+    <br>
+    <br>
 
-  <div *ngFor="let p of projects">
-    <app-shader-viewer [renderOnHover]="true" [dragable]="false" [shader]="p.shader"></app-shader-viewer>
-    <a [routerLink]="['/shader/'+ p.id]">{{ p.name }}</a>
-    Updated <span>{{ p.touched | timestring }}</span> ago
-    <a [routerLink]="['/project/rename/' + p.id]">[rename]</a>
-    <a [routerLink]="['/project/remove/' + p.id]">[X]</a>
+    <div class="projects">
+      <div *ngFor="let p of projects" class="project">
+        <div class="project-inner">
+          <div class="shader-viewer-wrapper">
+            <a [routerLink]="['/shader/'+ p.id]">
+              <app-shader-viewer [renderOnHover]="true" [dragable]="false" [shader]="p.shader"></app-shader-viewer>
+            </a>
+          </div>
+          <a [routerLink]="['/shader/'+ p.id]">{{ p.name }}</a>
+          Updated <span>{{ p.touched | timestring }}</span> ago
+        </div>
+      </div>
+    </div>
   </div>
 </div>
