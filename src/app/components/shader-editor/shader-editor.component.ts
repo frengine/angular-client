@@ -7,6 +7,7 @@ import { FloatPickerComponent } from 'src/app/components/code-pickers/float-pick
 import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 import {Project, ProjectService} from '../../project/project.service';
 import {Router} from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-shader-editor',
@@ -21,7 +22,12 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
 
   @Output() onChange: EventEmitter<any>;
 
-  constructor(public editorService : ShaderEditorService, private projectService: ProjectService, private router: Router) {
+  constructor(
+      public editorService: ShaderEditorService,
+      private projectService: ProjectService,
+      private router: Router,
+      private snackbar: MatSnackBar
+  ) {
     this.onChange = editorService.onChange;
   }
 
@@ -149,6 +155,7 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
       this.projectService.setContent(this.project.id, this.shader)
         .subscribe( (x) => {
           console.log("saveddd", x);
+          this.snackbar.open("Saved", null, { duration: 2000 })
         });
       e.preventDefault()
     }
@@ -163,7 +170,7 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
   }
 
   deleteProject() {
-    this.projectService.delete(this.project.id)
+    confirm("Are you sure you want to delete this project?") && this.projectService.delete(this.project.id)
       .subscribe((x) => {
         this.router.navigate(['/']);
       });
