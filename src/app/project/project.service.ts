@@ -50,7 +50,7 @@ export class ProjectService {
   }
 
   update(project: Project) {
-    const p = {};
+    let p = {} as Project;
     p.name = project.name;
     return this.http.put(`${this.baseURL}/${project.id}`, p);
   }
