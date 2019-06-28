@@ -22,3 +22,15 @@ ngx-monaco-editor {
     }
   }
 }
+
+h2 {
+  input {
+    border: none;
+    background-color: transparent;
+    color: white;
+    font-size: 25px;
+
+    outline-offset: -2px;
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+}
