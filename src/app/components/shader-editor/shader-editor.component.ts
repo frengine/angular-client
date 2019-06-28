@@ -1,4 +1,4 @@
-import {Component, ViewChild, Input, Output, EventEmitter, DoCheck, OnInit, HostListener} from '@angular/core';
+import {Component, ViewChild, Input, Output, EventEmitter, DoCheck, OnInit, HostListener, ElementRef} from '@angular/core';
 import { MonacoOptions, MonacoEditorComponent } from '@materia-ui/ngx-monaco-editor';
 import { Shader } from 'src/app/interfaces/shader';
 import * as monaco from 'monaco-editor';
@@ -35,6 +35,8 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
     language: 'c',
     automaticLayout: true
   };
+
+  @ViewChild("nameInput") nameInput : ElementRef;
 
   // these are 2 components that contain a monaco-editor:
   @ViewChild("vertEditor") vertEditorContainer: MonacoEditorComponent
@@ -160,6 +162,13 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
       .subscribe((x) => {
         console.log(x);
       })
+  }
+
+  startEdit() {
+    this.editName = true;
+    setTimeout(() => {
+      this.nameInput.nativeElement.focus();
+    }, 100);
   }
 
   deleteProject() {
