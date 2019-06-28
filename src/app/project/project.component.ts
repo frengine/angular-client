@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Project, ProjectService} from './project.service';
 import {DEFAULT_FRAG_CODE, DEFAULT_VERT_CODE, Shader} from '../interfaces/shader';
 import {Router} from '@angular/router';
+import { AuthService } from '../login/auth.service';
 
 @Component({
   selector: 'app-project',
@@ -11,7 +12,7 @@ import {Router} from '@angular/router';
 
 export class ProjectComponent implements OnInit {
 
-  constructor(private router: Router, private projectService: ProjectService) {}
+  constructor(private router: Router, private projectService: ProjectService, public loginService: AuthService) {}
 
   projects: Project[];
 

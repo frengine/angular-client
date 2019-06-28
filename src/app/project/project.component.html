@@ -1,5 +1,5 @@
 <div class="flex-item">
-  <div class="container">
+  <div *ngIf="loginService.currentUser" class="container">
     <h2>Shaders</h2>
     <a (click)="createNewProject()">New Project</a>
     <br>
@@ -19,4 +19,9 @@
       </div>
     </div>
   </div>
+  
+  <div *ngIf="loginService.currentUser == null" class="container">
+    <h2>You need to be signed in, in order to see more shaders</h2>
+  </div>
+
 </div>
