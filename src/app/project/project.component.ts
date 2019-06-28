@@ -30,7 +30,7 @@ export class ProjectComponent implements OnInit {
 
         for (const project of this.projects) {
           const rev = project.revision;
-          project.shader = JSON.parse(rev.content) as Shader;
+          project.shader = JSON.parse(rev["content"]) as Shader;
         }
         console.log(this.projects);
       }
@@ -43,10 +43,10 @@ export class ProjectComponent implements OnInit {
     shader.vertSource = DEFAULT_VERT_CODE;
     this.projectService.create('random').subscribe((x) => {
       console.log(x);
-      const projectId = x.projectID;
+      const projectId = x["projectID"];
       this.projectService.setContent(projectId, shader).subscribe((y) => {
 
-        this.router.navigate(['/shader/' + x.projectID]);
+        this.router.navigate(['/shader/' + x["projectID"]]);
       };
     });
   }
