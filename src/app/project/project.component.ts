@@ -47,7 +47,7 @@ export class ProjectComponent implements OnInit {
       this.projectService.setContent(projectId, shader).subscribe((y) => {
 
         this.router.navigate(['/shader/' + x["projectID"]]);
-      };
+      });
     });
   }
 
