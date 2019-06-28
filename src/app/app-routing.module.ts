@@ -13,7 +13,6 @@ const routes: Routes = [
   { path: 'project/new', component: NewProjectComponent },
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
-  { path: 'shader', component: ShaderTestComponent},
   {
     path: 'shader/:shaderId',
     component: ShaderTestComponent,
@@ -21,7 +20,8 @@ const routes: Routes = [
       project: ProjectResolver,
       shader: ShaderResolver
     }
-  }
+  },
+  // { path: 'new', component: ShaderTestComponent},
 ];
 
 @NgModule({

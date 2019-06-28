@@ -6,6 +6,7 @@ import { CompileResult, LogEntry, Severity } from 'src/app/services/shader.servi
 import { FloatPickerComponent } from 'src/app/components/code-pickers/float-picker.component';
 import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 import {Project, ProjectService} from '../../project/project.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-shader-editor',
@@ -16,9 +17,11 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
 
   @Input() shader: Shader; // the shader to be edited.
   @Input() project: Project;
+  @Input() editName = false;
+
   @Output() onChange: EventEmitter<any>;
 
-  constructor(public editorService : ShaderEditorService, private projectService: ProjectService) {
+  constructor(public editorService : ShaderEditorService, private projectService: ProjectService, private router: Router) {
     this.onChange = editorService.onChange;
   }
 
@@ -149,5 +152,20 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
         });
       e.preventDefault()
     }
+  }
+
+  updateName() {
+    this.editName = false;
+    this.projectService.update(this.project)
+      .subscribe((x) => {
+        console.log(x);
+      })
+  }
+
+  deleteProject() {
+    this.projectService.delete(this.project.id)
+      .subscribe((x) => {
+        this.router.navigate(['/']);
+      });
   }
 }

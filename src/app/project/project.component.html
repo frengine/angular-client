@@ -1,7 +1,7 @@
 <div class="flex-item">
   <div class="container">
     <h2>Shaders</h2>
-    <a [routerLink]="['/project/new']">New Project</a>
+    <a (click)="createNewProject()">New Project</a>
     <br>
     <br>
 
@@ -9,12 +9,12 @@
       <div *ngFor="let p of projects" class="project">
         <div class="project-inner">
           <div class="shader-viewer-wrapper">
-            <app-shader-viewer [renderOnHover]="true" [dragable]="false" [shader]="p.shader"></app-shader-viewer>
+            <a [routerLink]="['/shader/'+ p.id]">
+              <app-shader-viewer [renderOnHover]="true" [dragable]="false" [shader]="p.shader"></app-shader-viewer>
+            </a>
           </div>
           <a [routerLink]="['/shader/'+ p.id]">{{ p.name }}</a>
           Updated <span>{{ p.touched | timestring }}</span> ago
-          <a [routerLink]="['/project/rename/' + p.id]">[rename]</a>
-          <a [routerLink]="['/project/remove/' + p.id]">[X]</a>
         </div>
       </div>
     </div>
