@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Shader } from '../interfaces/shader';
+import { ShaderEditorService } from './shader-editor.service';
 
 export interface CompileResult {
   program: WebGLProgram
@@ -31,7 +32,9 @@ export interface LogEntry {
 })
 export class ShaderService {
 
-  constructor() { }
+  constructor(
+      private editorService: ShaderEditorService
+  ) { }
 
   /**
    * Tries to compile a shader.

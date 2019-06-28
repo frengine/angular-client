@@ -15,13 +15,6 @@ void main(void) {
 `
 
 export const DEFAULT_FRAG_CODE = `
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-uniform float u_time;
-uniform vec2 u_mouse;
-uniform ivec2 u_resolution;
 
 void main(void) {
 
