@@ -24,8 +24,10 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
   startTime = null // u_time
   mousePosX = 0 // u_mouse
   mousePosY = 0
+  oldMousePosX = 0 // u_mouse
+  oldMousePosY = 0
   screenWidth = 600 // u_resolution
-  screenHeight = 350
+  screenHeight = 450
 
   constructor(
     private shaderService: ShaderService,
@@ -49,29 +51,39 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     let x = Math.max(Math.min(e.x - rect.x, rect.width), 0) | 0;
     let y = Math.max(Math.min(e.y - rect.y, rect.height), 0) | 0;
     
-    this.screenWidth = rect.width | 0;
-    this.screenHeight = rect.height | 0;
-    this.mousePosX = x / this.screenWidth;
-    this.mousePosY = 1 - y / this.screenHeight;
+    this.screenWidth = rect.width;
+    this.screenHeight = rect.height;
+
+    const newPosX = x / this.screenWidth, newPosY = 1 - y / this.screenHeight;
+    if (Math.abs(newPosX - this.mousePosX) > .02 || Math.abs(newPosY - this.mousePosY) > .02)
+    {
+        this.oldMousePosX = this.mousePosX;
+        this.oldMousePosY = this.mousePosY;
+    }
+    this.mousePosX = newPosX
+    this.mousePosY = newPosY;
   }
 
   @HostListener('window:resize') // u_resolution
   onResize() {
     let rect: DOMRect = this.glCanvas.nativeElement.getBoundingClientRect();
-    this.screenWidth = rect.width | 0;
-    this.screenHeight = rect.height | 0;
+    this.screenWidth = rect.width;
+    this.screenHeight = rect.height;
+    this.glCanvas.nativeElement.width = this.screenWidth
+    this.glCanvas.nativeElement.height = this.screenHeight
     this.render(true);
   }
   
   
   ngOnInit() {
-      this.gl = this.glCanvas.nativeElement.getContext('webgl')
-      
-      if (!this.gl) {
-          alert('Unable to initialize WebGL. Your browser or machine may not support it.')
-          return
-        }
-        this.compileAndRender()
+    this.gl = this.glCanvas.nativeElement.getContext('webgl')
+    
+    if (!this.gl) {
+      alert('Unable to initialize WebGL. Your browser or machine may not support it.')
+      return
+    }
+    this.compileAndRender()
+    setTimeout(() => this.onResize(), 100)
   }
 
   ngOnDestroy() {
@@ -110,6 +122,7 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
 
     this.u_timeLocation = this.gl.getUniformLocation(this.shaderProgram, "u_time");
     this.u_mouseLocation = this.gl.getUniformLocation(this.shaderProgram, "u_mouse");
+    this.u_mouseDirLocation = this.gl.getUniformLocation(this.shaderProgram, "u_mouseDir");
     this.u_resolutionLocation = this.gl.getUniformLocation(this.shaderProgram, "u_resolution");
 
     this.editorService.uniforms = {
@@ -125,6 +138,12 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
         description: "Mouse position on screen, range 0 - 1",
         value: "(0, 0)"
       },
+      u_mouseDir: {
+        name: "u_mouseDir",
+        type: "vec2",
+        description: "Mouse direction",
+        value: "(0, 0)"
+      },
       u_resolution: {
         name: "u_resolution",
         type: "ivec2",
@@ -135,7 +154,7 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
   }
 
   a_positionLocation
-  u_timeLocation; u_mouseLocation; u_resolutionLocation;
+  u_timeLocation; u_mouseLocation; u_resolutionLocation; u_mouseDirLocation;
 
   hovering(): boolean {
       return this.mousePosX > 0 && this.mousePosX < 1 && this.mousePosY > 0 && this.mousePosY < 1
@@ -163,8 +182,6 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     );
 
     this.gl.viewport(0, 0, this.screenWidth, this.screenHeight);
-    this.glCanvas.nativeElement.width = this.screenWidth
-    this.glCanvas.nativeElement.height = this.screenHeight
     
     this.gl.enableVertexAttribArray(this.a_positionLocation);
     this.gl.vertexAttribPointer(this.a_positionLocation, 2, this.gl.FLOAT, false, 0, 0);
@@ -172,8 +189,22 @@ export class ShaderViewerComponent implements OnInit, OnDestroy {
     const time = (Date.now() / 1000) - this.startTime;
     this.gl.uniform1f(this.u_timeLocation, time);
     this.editorService.uniforms.u_time.value = time.toFixed(2);
+
     this.gl.uniform2f(this.u_mouseLocation, this.mousePosX, this.mousePosY);
     this.editorService.uniforms.u_mouse.value = `(${this.mousePosX.toFixed(2)}, ${this.mousePosY.toFixed(2)})`
+
+    let mouseDirX = this.mousePosX - this.oldMousePosX, mouseDirY = this.mousePosY - this.oldMousePosY;
+
+    // sqrt( a^2 + b^2 ) = length
+
+    const len = Math.sqrt(mouseDirX * mouseDirX + mouseDirY * mouseDirY)
+    mouseDirX *= 1/len
+    mouseDirY *= 1/len
+
+
+    this.gl.uniform2f(this.u_mouseDirLocation, mouseDirX, mouseDirY);
+    this.editorService.uniforms.u_mouseDir.value = `(${mouseDirX.toFixed(2)}, ${mouseDirY.toFixed(2)})`
+
     this.gl.uniform2i(this.u_resolutionLocation, this.screenWidth, this.screenHeight);
     this.editorService.uniforms.u_resolution.value = `(${this.screenWidth}, ${this.screenHeight})`
 
