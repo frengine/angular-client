@@ -1,9 +1,7 @@
 <div class="flex-item">
   <div *ngIf="loginService.currentUser" class="container">
-    <h2>Shaders</h2>
-    <a (click)="createNewProject()">New Project</a>
-    <br>
-    <br>
+    <button style="float: right;" class="mat-raised-button" (click)="createNewProject()">New Project</button>
+    <h1>Shaders</h1>
 
     <div class="projects">
       <div *ngFor="let p of projects" class="project">
@@ -21,7 +19,16 @@
   </div>
   
   <div *ngIf="loginService.currentUser == null" class="container">
-    <h2>You need to be signed in, in order to see more shaders</h2>
-  </div>
+	<div class="splash">
+		<div class="buttons">
+			<h1>Frengine</h1>
+ 			Frengine is a revolutianary way to develop shaders in the cloud.
+			<br />
 
+			<button [routerLink]="['/register']" class="mat-raised-button" color="accent"><h2>Create account</h2></button>
+			<button [routerLink]="['/login']" class="mat-raised-button"><h2>Log in</h2></button>
+		</div>
+		<app-shader-viewer [renderOnHover]="true" [dragable]="false" [shader]="splashProject.shader"></app-shader-viewer>
+	</div>
+  </div>
 </div>

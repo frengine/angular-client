@@ -1,12 +1,7 @@
 {
-	"api": {
-		"target": "http://127.0.0.1:8003",
+	"/api": {
+		"target": "http://butje.remi.im:8083",
 		"secure": false,
-		"changeOrigin": true
-	},
-  "/api": {
-    "target": "http://butje.remi.im:8083",
-    "secure": false,
-    "changeOrigin": true
-  }
+		"changeOrigin": false
+	}
 }
