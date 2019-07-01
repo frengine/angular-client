@@ -1,14 +1,14 @@
 <div fxLayout="column" style="height: 100%">
 
   <div fxFlex="none">
-    <div *ngIf="project.name;else noprojectname">
+    <div class="left" *ngIf="project.name;else noprojectname">
       <h2 *ngIf="!editName" (click)="startEdit()">{{ project.name }}</h2>
     </div>
     <ng-template #noprojectname>
       <h2 #noprojectname>Geen naam</h2>
     </ng-template>
-    <h2><input #nameInput *ngIf="editName" [(ngModel)]="project.name" (blur)="updateName()" (keydown.enter)="updateName()" type="text" class="form-control" /></h2>
-    <a (click)="deleteProject()">Delete project</a>
+    <h2 class="left"><input #nameInput *ngIf="editName" [(ngModel)]="project.name" (blur)="updateName()" (keydown.enter)="updateName()" type="text" class="form-control" /></h2>
+    <a class="right" (click)="deleteProject()">Delete project</a>
   </div>
 
   <mat-tab-group fxFlex="none" animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="editorService.tabIndex"
