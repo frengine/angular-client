@@ -8,7 +8,7 @@ import {AuthService} from '../../login/auth.service';
 })
 export class HeaderComponent implements OnInit {
 
-  headerText = 'Niet ingelogd';
+  headerText = 'Not logged in';
 
   constructor(public loginService: AuthService) {
   }

@@ -16,8 +16,14 @@ export class ProjectComponent implements OnInit {
 
   projects: Project[];
 
+	splashProject: Project
+
   ngOnInit() {
-    this.showProjects();
+	if (this.loginService.currentUser != null) {
+		this.showProjects();
+	} else {
+		this.showSplash();
+	}
   }
 
   showProjects() {
@@ -38,11 +44,20 @@ export class ProjectComponent implements OnInit {
     );
   }
 
+	showSplash() {
+		this.projectService.find(6).subscribe((p: Project) => {
+			this.splashProject = p
+			this.splashProject.shader = JSON.parse(p.revision["content"]) as Shader
+			console.log("SHADER PROJECT")
+			console.log(this.splashProject.shader)
+		})
+	}
+
   createNewProject() {
     const shader = {} as Shader;
     shader.fragSource = DEFAULT_FRAG_CODE;
     shader.vertSource = DEFAULT_VERT_CODE;
-    this.projectService.create('random').subscribe((x) => {
+    this.projectService.create(prompt("enter a name")).subscribe((x) => {
       console.log(x);
       const projectId = x["projectID"];
       this.projectService.setContent(projectId, shader).subscribe((y) => {
