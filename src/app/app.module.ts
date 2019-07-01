@@ -27,6 +27,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { ProjectResolver } from './project/project.resolver';
 import { ShaderResolver } from './project/shader.resolver';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { ShaderResolver } from './project/shader.resolver';
     ShaderLogViewerComponent,
     FloatPickerComponent,
     TimestringPipe,
+    NotFoundComponent,
   ],
   imports: [
     DragDropModule,
