@@ -12,7 +12,7 @@
             </a>
           </div>
           <a [routerLink]="['/shader/'+ p.id]">{{ p.name }}</a>
-          Updated <span>{{ p.touched * 1000 | timestring }}</span> ago
+	  by {{ p.author.name }}, updated <span>{{ p.touched * 1000 | timestring }}</span> ago
         </div>
       </div>
     </div>

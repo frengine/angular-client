@@ -1,6 +1,6 @@
 <div fxLayout="column" style="height: 100%">
 
-  <div fxFlex="none">
+  <div *ngIf="mine" fxFlex="none">
     <div class="left" *ngIf="project.name;else noprojectname">
       <h2 *ngIf="!editName" (click)="startEdit()">{{ project.name }}</h2>
     </div>
@@ -9,6 +9,11 @@
     </ng-template>
     <h2 class="left"><input #nameInput *ngIf="editName" [(ngModel)]="project.name" (blur)="updateName()" (keydown.enter)="updateName()" type="text" class="form-control" /></h2>
     <a class="right" (click)="deleteProject()">Delete project</a>
+  </div>
+  <div *ngIf="!mine">
+	  <h2>{{ project.name }}</h2>
+	  by {{ project.author.name }},
+	updated <span>{{ project.touched * 1000 | timestring }}</span> ago
   </div>
 
   <mat-tab-group fxFlex="none" animationDuration="0ms" (selectedIndexChange)="tabChange($event)" [selectedIndex]="editorService.tabIndex"

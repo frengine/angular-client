@@ -8,6 +8,8 @@ import { ShaderEditorService } from 'src/app/services/shader-editor.service';
 import {Project, ProjectService} from '../../project/project.service';
 import {Router} from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { AuthService } from '../../login/auth.service';
+
 
 @Component({
   selector: 'app-shader-editor',
@@ -26,14 +28,27 @@ export class ShaderEditorComponent implements DoCheck, OnInit {
       public editorService: ShaderEditorService,
       private projectService: ProjectService,
       private router: Router,
-      private snackbar: MatSnackBar
+      private snackbar: MatSnackBar,
+      private loginService: AuthService
   ) {
     this.onChange = editorService.onChange;
   }
 
+  mine: boolean = false
+
   ngOnInit() {
     this.editorService.shader = this.shader;
     window["shaderEditor"] = this
+
+	if (this.loginService.currentUser != null) {
+		let me = this.loginService.currentUser.id
+		let author = this.project.author.id
+		console.log(me)
+		console.log(author)
+		if (me + "" == author + "") {
+			this.mine = true
+		}
+	}
   }
 
   editorOptions: MonacoOptions = { 
